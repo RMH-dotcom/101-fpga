@@ -1,0 +1,85 @@
+# FPGA Project .gitignore
+# This file tells Git what to IGNORE (not commit)
+
+# ====================
+# Simulation outputs
+# ====================
+sim
+*.vcd
+*.vvp
+*.fst
+*.ghw
+
+# ====================
+# Vivado generated files
+# ====================
+vivado_projects/
+.Xil/
+*.jou
+*.log
+*.str
+*.debug
+*.xpr
+*.cache/
+*.hw/
+*.ip_user_files/
+*.runs/
+*.sim/
+
+# ====================
+# Bitstream files (usually ignored, sometimes kept)
+# ====================
+*.bit
+*.bin
+*.mcs
+*.prm
+
+# ====================
+# Verilator outputs
+# ====================
+obj_dir/
+*.d
+*.o
+
+# ====================
+# Yosys outputs
+# ====================
+*.json
+*.asc
+*.blif
+
+# ====================
+# Editor backup files
+# ====================
+*~
+*.swp
+*.swo
+.*.sw?
+
+# ====================
+# OS files
+# ====================
+.DS_Store
+Thumbs.db
+
+# ====================
+# Python (for testbenches)
+# ====================
+__pycache__/
+*.pyc
+*.pyo
+
+# ====================
+# Build artifacts
+# ====================
+*.rpt
+*.dcp
+*.ltx
+
+# Note: You SHOULD commit:
+# - *.v (Verilog source)
+# - *.xdc (Constraints)
+# - *.tcl (Build scripts)
+# - Makefile (Build automation)
+# - *.py (Test scripts)
+# - README.md (Documentation)

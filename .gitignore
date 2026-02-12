@@ -1,0 +1,33 @@
+# Vivado projects
+vivado-*/
+*.cache/
+*.hw/
+*.ip_user_files/
+*.runs/
+*.sim/
+*.srcs/sources_1/ip/
+*.Xil/
+
+# Vivado logs
+*.jou
+*.log
+*.str
+*.pb
+
+# Simulation
+*.vcd
+*.ghw
+*.fst
+*.vvp
+*.out
+
+# Synthesis outputs
+*.bit
+*.bin
+*.dcp
+*.ltx
+
+# OS
+.DS_Store
+*~
+*.swp

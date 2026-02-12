@@ -1,0 +1,22 @@
+#! /nix/store/m04y2lx8sg94qs882x55kihlwa9dvq1y-iverilog-12.0/bin/vvp
+:ivl_version "12.0 (stable)";
+:ivl_delay_selection "TYPICAL";
+:vpi_time_precision + 0;
+:vpi_module "/nix/store/m04y2lx8sg94qs882x55kihlwa9dvq1y-iverilog-12.0/lib/ivl/system.vpi";
+:vpi_module "/nix/store/m04y2lx8sg94qs882x55kihlwa9dvq1y-iverilog-12.0/lib/ivl/vhdl_sys.vpi";
+:vpi_module "/nix/store/m04y2lx8sg94qs882x55kihlwa9dvq1y-iverilog-12.0/lib/ivl/vhdl_textio.vpi";
+:vpi_module "/nix/store/m04y2lx8sg94qs882x55kihlwa9dvq1y-iverilog-12.0/lib/ivl/v2005_math.vpi";
+:vpi_module "/nix/store/m04y2lx8sg94qs882x55kihlwa9dvq1y-iverilog-12.0/lib/ivl/va_math.vpi";
+S_0x563c98fe7ef0 .scope module, "top_module" "top_module" 2 14;
+ .timescale 0 0;
+    .port_info 0 /INPUT 1 "in";
+    .port_info 1 /OUTPUT 1 "out";
+o0x7f08660c6018 .functor BUFZ 1, C4<z>; HiZ drive
+L_0x563c99019280 .functor BUFZ 1, o0x7f08660c6018, C4<0>, C4<0>, C4<0>;
+v0x563c98fd2dd0_0 .net "in", 0 0, o0x7f08660c6018;  0 drivers
+v0x563c98fd3430_0 .net "out", 0 0, L_0x563c99019280;  1 drivers
+# The file index is used to find the file name in the following table.
+:file_names 3;
+    "N/A";
+    "<interactive>";
+    "/home/nixoslaptopmak/Projects/101/fpga/hdlbits/create-continuous-assignment.v";

@@ -1,0 +1,39 @@
+#! /nix/store/qb387i0h58m8c8lc3kj9ckd5nm5jxvg7-iverilog-12.0/bin/vvp
+:ivl_version "12.0 (stable)";
+:ivl_delay_selection "TYPICAL";
+:vpi_time_precision + 0;
+:vpi_module "/nix/store/qb387i0h58m8c8lc3kj9ckd5nm5jxvg7-iverilog-12.0/lib/ivl/system.vpi";
+:vpi_module "/nix/store/qb387i0h58m8c8lc3kj9ckd5nm5jxvg7-iverilog-12.0/lib/ivl/vhdl_sys.vpi";
+:vpi_module "/nix/store/qb387i0h58m8c8lc3kj9ckd5nm5jxvg7-iverilog-12.0/lib/ivl/vhdl_textio.vpi";
+:vpi_module "/nix/store/qb387i0h58m8c8lc3kj9ckd5nm5jxvg7-iverilog-12.0/lib/ivl/v2005_math.vpi";
+:vpi_module "/nix/store/qb387i0h58m8c8lc3kj9ckd5nm5jxvg7-iverilog-12.0/lib/ivl/va_math.vpi";
+S_0x5642872d0ed0 .scope module, "top_module" "top_module" 2 17;
+ .timescale 0 0;
+    .port_info 0 /INPUT 1 "a";
+    .port_info 1 /INPUT 1 "b";
+    .port_info 2 /INPUT 1 "c";
+    .port_info 3 /OUTPUT 1 "w";
+    .port_info 4 /OUTPUT 1 "x";
+    .port_info 5 /OUTPUT 1 "y";
+    .port_info 6 /OUTPUT 1 "z";
+v0x5642872d1110_0 .net *"_ivl_5", 3 0, L_0x564287304cb0;  1 drivers
+o0x7f5a0e1a0048 .functor BUFZ 1, C4<z>; HiZ drive
+v0x564287304270_0 .net "a", 0 0, o0x7f5a0e1a0048;  0 drivers
+o0x7f5a0e1a0078 .functor BUFZ 1, C4<z>; HiZ drive
+v0x564287304330_0 .net "b", 0 0, o0x7f5a0e1a0078;  0 drivers
+o0x7f5a0e1a00a8 .functor BUFZ 1, C4<z>; HiZ drive
+v0x5642873043d0_0 .net "c", 0 0, o0x7f5a0e1a00a8;  0 drivers
+v0x564287304490_0 .net "w", 0 0, L_0x5642873048c0;  1 drivers
+v0x5642873045a0_0 .net "x", 0 0, L_0x564287304960;  1 drivers
+v0x564287304660_0 .net "y", 0 0, L_0x564287304a80;  1 drivers
+v0x564287304720_0 .net "z", 0 0, L_0x564287304b20;  1 drivers
+L_0x5642873048c0 .part L_0x564287304cb0, 3, 1;
+L_0x564287304960 .part L_0x564287304cb0, 2, 1;
+L_0x564287304a80 .part L_0x564287304cb0, 1, 1;
+L_0x564287304b20 .part L_0x564287304cb0, 0, 1;
+L_0x564287304cb0 .concat [ 1 1 1 1], o0x7f5a0e1a00a8, o0x7f5a0e1a0078, o0x7f5a0e1a0078, o0x7f5a0e1a0048;
+# The file index is used to find the file name in the following table.
+:file_names 3;
+    "N/A";
+    "<interactive>";
+    "/home/nixoslaptopmak/Projects/101/fpga/hdlbits/three-inputs-four-outputs.v";

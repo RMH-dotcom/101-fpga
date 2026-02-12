@@ -1,0 +1,27 @@
+#! /nix/store/m04y2lx8sg94qs882x55kihlwa9dvq1y-iverilog-12.0/bin/vvp
+:ivl_version "12.0 (stable)";
+:ivl_delay_selection "TYPICAL";
+:vpi_time_precision + 0;
+:vpi_module "/nix/store/m04y2lx8sg94qs882x55kihlwa9dvq1y-iverilog-12.0/lib/ivl/system.vpi";
+:vpi_module "/nix/store/m04y2lx8sg94qs882x55kihlwa9dvq1y-iverilog-12.0/lib/ivl/vhdl_sys.vpi";
+:vpi_module "/nix/store/m04y2lx8sg94qs882x55kihlwa9dvq1y-iverilog-12.0/lib/ivl/vhdl_textio.vpi";
+:vpi_module "/nix/store/m04y2lx8sg94qs882x55kihlwa9dvq1y-iverilog-12.0/lib/ivl/v2005_math.vpi";
+:vpi_module "/nix/store/m04y2lx8sg94qs882x55kihlwa9dvq1y-iverilog-12.0/lib/ivl/va_math.vpi";
+S_0x561d81f3ef50 .scope module, "create_xnor_gate" "create_xnor_gate" 2 5;
+ .timescale 0 0;
+    .port_info 0 /INPUT 1 "a";
+    .port_info 1 /INPUT 1 "b";
+    .port_info 2 /OUTPUT 1 "out";
+o0x7f41068c6048 .functor BUFZ 1, C4<z>; HiZ drive
+o0x7f41068c6078 .functor BUFZ 1, C4<z>; HiZ drive
+L_0x561d81f70c90 .functor XOR 1, o0x7f41068c6048, o0x7f41068c6078, C4<0>, C4<0>;
+L_0x561d81f70d90 .functor NOT 1, L_0x561d81f70c90, C4<0>, C4<0>, C4<0>;
+v0x561d81f2bcc0_0 .net *"_ivl_0", 0 0, L_0x561d81f70c90;  1 drivers
+v0x561d81f2a390_0 .net "a", 0 0, o0x7f41068c6048;  0 drivers
+v0x561d81f70ab0_0 .net "b", 0 0, o0x7f41068c6078;  0 drivers
+v0x561d81f70b50_0 .net "out", 0 0, L_0x561d81f70d90;  1 drivers
+# The file index is used to find the file name in the following table.
+:file_names 3;
+    "N/A";
+    "<interactive>";
+    "/home/nixoslaptopmak/Projects/101/fpga/hdlbits/create-xnor-gate.v";
