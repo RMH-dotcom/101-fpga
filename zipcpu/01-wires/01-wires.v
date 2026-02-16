@@ -3,10 +3,10 @@
 // 1. To get an idea of what combinatorial logic is.
 
 module thruwire (
-    input  i_sw, // Need a physical switch
-    output o_led // Need a physical LED
+    input  wire [3:0] i_sw, // Need a physical switch
+    output wire [3:0] o_led // Need a physical LED
 );
-  assign o_led = i_sw;
+  assign o_led [2] = i_sw [0];
 endmodule
 
 // fundamental part of any FPGA design maps your ports to the pins.

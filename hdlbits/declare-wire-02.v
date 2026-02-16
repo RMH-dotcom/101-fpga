@@ -1,3 +1,4 @@
+/* verilator lint_off DECLFILENAME */
 // Create two intermediate wires to connect the AND and OR gates together.
 // Note: the wire that feeds the NOT gate is wire out, so no need to declare
 // a third wire here.
