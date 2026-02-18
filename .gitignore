@@ -1,10 +1,12 @@
 # Vivado projects
 vivado-*/
+*-vivado/
+build/
 *.cache/
 *.hw/
 *.ip_user_files/
 *.runs/
-*.sim/
+.sim/
 *.srcs/sources_1/ip/
 *.Xil/
 
@@ -20,6 +22,7 @@ vivado-*/
 *.fst
 *.vvp
 *.out
+obj_dir/
 
 # Synthesis outputs
 *.bit
@@ -31,3 +34,6 @@ vivado-*/
 .DS_Store
 *~
 *.swp
+
+# Generated documentation
+*.html
