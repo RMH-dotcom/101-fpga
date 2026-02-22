@@ -1,0 +1,8 @@
+# running in led-walker/src/
+read -formal led-walker.sv # Read the RTL with FORMAL defines enabled
+prep -top led_walker # Specify top module. Synthesize and prepare module for verification
+
+hierarchy -smtcheck
+rename -witness
+write_jny -no-connections ../model/design.json
+write_rtlil ../model/design.il

@@ -1,0 +1,14 @@
+[options]
+mode bmc # Verification mode checking (checks finite depth)
+depth 20 # How many clock cycles (from 0 to 1 to 0) to check
+         # The LED walker needs 4 cycles to complete, so 20 is plenty
+
+[engines]
+smtbmc z3 # Which "solver" backend to use
+
+[script]
+read -formal led-walker.sv # Read the RTL with FORMAL defines enabled
+prep -top led_walker # Specify top module. Synthesize and prepare module for verification
+
+[files]
+/home/nixoslaptopmak/Projects/101/fpga/zipcpu/03-finite-state-machines/rtl/led-walker.sv # Path to the RTL

@@ -37,3 +37,6 @@ obj_dir/
 
 # Generated documentation
 *.html
+
+# Formal verification outputs
+formal/*/
