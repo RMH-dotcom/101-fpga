@@ -1,0 +1,8 @@
+# running in led-walker-upon-request_prf/src/
+read -formal led-walker-upon-request.sv # Read the RTL with formal defines enabled
+prep -top led_walker_upon_request # Specify top module. Synthesise and prepare module for verification
+
+hierarchy -smtcheck
+rename -witness
+write_jny -no-connections ../model/design.json
+write_rtlil ../model/design.il

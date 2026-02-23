@@ -1,0 +1,25 @@
+[tasks]
+prf
+cvr
+
+[options]
+# prf (prove): Checks if the .sv never breaks. If there's no failure, even at infinite cycles,
+# the hdl is valid
+# Is o_led one-hot for infinite/unbounded cycles, but we are bounding them to 20 here
+prf: mode bmc # Verification mode checking
+prf: depth 20 # how many clock cycles (from 0 to 1 to 0) to check
+
+# cvr (cover): Finds traces satisfying cover() statements
+# Can led_index reach 3?
+cvr: mode cover
+cvr: depth 20
+
+[engines]
+smtbmc z3 # Which "solver" backend to use
+
+[script]
+read -formal led-walker-upon-request.sv # Read the RTL with formal defines enabled
+prep -top led_walker_upon_request # Specify top module. Synthesise and prepare module for verification
+
+[files]
+../rtl/led-walker-upon-request.sv

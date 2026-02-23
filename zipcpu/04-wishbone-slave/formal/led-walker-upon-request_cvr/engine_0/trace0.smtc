@@ -1,0 +1,29 @@
+initial
+assume (= [$auto$async2sync.cc:101:execute$46] false)
+assume (= [$auto$async2sync.cc:110:execute$50] true)
+assume (= [led_index] #x0)
+
+state 0
+assume (= [i_clk] false)
+assume (= [i_wb_stb] false)
+assume (= [i_wb_we] false)
+
+state 1
+assume (= [i_clk] false)
+assume (= [i_wb_stb] false)
+assume (= [i_wb_we] false)
+
+state 2
+assume (= [i_clk] false)
+assume (= [i_wb_stb] false)
+assume (= [i_wb_we] false)
+
+state 3
+assume (= [i_clk] false)
+assume (= [i_wb_stb] false)
+assume (= [i_wb_we] false)
+
+state 4
+assume (= [i_clk] false)
+assume (= [i_wb_stb] false)
+assume (= [i_wb_we] false)
