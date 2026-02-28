@@ -1,1 +1,0 @@
-nixoslaptopmak@nixos.25660:1772188995
