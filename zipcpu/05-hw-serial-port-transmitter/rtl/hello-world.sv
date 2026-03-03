@@ -37,25 +37,36 @@ module hello_world (
   // Create the actual variable using the above definition
   state_t state;
 
-  initial {o_busy, state} = {1'b0, IDLE}; // By default, set o_busy to off, and the state to idle
+  // Clock divider preamble
+  initial counter = 0;
+  logic baud_stb;
+  logic [9:0] counter;
+  parameter CLOCKS_PER_BAUD = 868; // 100MHz / 115200 baud
+
+  initial {o_busy, state} = {1'b0, IDLE};  // By default, set o_busy to off, and the state to idle
     always_ff @(posedge i_clk) // Everytime the clock ticks up (0 to 1), execute the logic below
       if ((i_wr) && (!o_busy)) begin // If the write is requested, and o_busy is NOT busy,
         {o_busy, state} <= {1'b1, START}; //o_busy is turned ON, and the state is active
         data_reg <= {1'b1, i_data, 1'b0}; // {stop, 8 data bits, start}
-        end
+      end
           else if (state == IDLE) begin // or
             {o_busy, state} <= {1'b0, state}; // Ensure o_busy stays off while waiting in IDLE
-            end
+          end
+               else if (counter > 0)
+                 counter <= counter - 1;
+                    else if (state == IDLE)
+                      {o_busy, state} <= {1'b0, state}; // Stays idle
               else if (state < LAST) begin // or
                   o_busy <= 1'b1; // o_busy is turned ON
                   state <= state_t'(state + 4'd1); // Increment to the next state (counting up)
                   // Shift right for more data, and 1'b1 in from the left
                   data_reg <= {1'b1, data_reg[9:1]};
-                 end
+              end
                    else begin // If at LAST,
                      // when the state reaches LAST, stay busy for one more cycle,
                      // but reset the state to IDLE
                    {o_busy, state} <= {1'b1, IDLE};
-                  end
+                   end
   assign o_uart_tx = data_reg[0];
+  assign baud_stb = (counter == 0);
 endmodule // hello_world
