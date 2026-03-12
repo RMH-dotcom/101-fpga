@@ -1,7 +1,7 @@
 /* verilator lint_off DECLFILENAME */
 
 // This script comprises of a two module design
-// It wll:
+// It will:
 // 1. Build a serial port transmitter: i_clk, i_wr, o_busy, i_data, o_uart_tx
 // 2. Be able to transmit Hello World!: as above
 // 3. Clean up the Verilator work
@@ -16,57 +16,45 @@
 // - Ten states to the state machine
 // - Will still need to slow it down later
 
+// Block 1: State machine (gated by baud_stb)
+// if (i_wr && !o_busy) -> start
+// else if (baud_stb)   -> advance state
+// The state machine doesn't know about the counter at all -- it just waits for baud_stb to say "go!"
+
+// Block 2: Data register (also gated by baud_stb)
+// if (i_wr && !o_busy)  -> load data
+// else if (baud_stb)    -> shift right
+
+// Block 3: Counter
+// if (i_wr && !o_busy)     -> reset counter, baud_stb = 0
+// else if (!baud_stb)      -> count down
+// else if (state != IDLE)  -> reload counter
+
+// Important: Dan uses a 9-bit lcl_data (not 10). He loads {i_data, 1'b0}
+// The start bit sits at position 0, and 1's shift in from the left naturally becoming the stop bit
+
 module hello_world (
-                    input logic i_clk,
-                    input logic i_wr,
-                    input logic [7:0] i_data,
-                    output logic o_busy,
-                    output logic o_uart_tx
-);
+                    input logic i_wr, i_clk, i_data [7:0],
+                    output logic o_busy, o_uart_tx
+                    );
 
-  // Define IDLE, START, LAST and their values
-  typedef enum logic [3:0] {
-                            IDLE = 4'b0000, // IDLE = 0
-                            START = 4'b0001, // START = 1
-                            LAST = 4'd10 // LAST = 10
-                            } state_t;
+  typedef enum logic [7:0] {
+                IDLE = 4'b0000, // IDLE = 0
+                START = 4'b0001, // START = 1
+                LAST = 4'd10 // LAST = 10
+                } state;
+  state current_state, next_state;
 
-  // Store the byte to transit
-  logic [9:0]  data_reg; // data_reg holds: start + 8 data + stop
-
-  // Create the actual variable using the above definition
-  state_t state;
-
-  // Clock divider preamble
+  // Clock divider example
   initial counter = 0;
-  logic baud_stb;
   logic [9:0] counter;
-  parameter CLOCKS_PER_BAUD = 868; // 100MHz / 115200 baud
+  logic [8:0] lcl_data;
+  logic [23:0] count;
+  logic baud_stb;
+  // Store the byte to transit
+  logic [9:0] data_reg; // data_reg holds: start + 8-bit data + stop
+  
+  parameter    CLOCKS_PER_BAUD = 868; // 100MHz / 115200 baud
 
-  initial {o_busy, state} = {1'b0, IDLE};  // By default, set o_busy to off, and the state to idle
-    always_ff @(posedge i_clk) // Everytime the clock ticks up (0 to 1), execute the logic below
-      if ((i_wr) && (!o_busy)) begin // If the write is requested, and o_busy is NOT busy,
-        {o_busy, state} <= {1'b1, START}; //o_busy is turned ON, and the state is active
-        data_reg <= {1'b1, i_data, 1'b0}; // {stop, 8 data bits, start}
-      end
-          else if (state == IDLE) begin // or
-            {o_busy, state} <= {1'b0, state}; // Ensure o_busy stays off while waiting in IDLE
-          end
-               else if (counter > 0)
-                 counter <= counter - 1;
-                    else if (state == IDLE)
-                      {o_busy, state} <= {1'b0, state}; // Stays idle
-              else if (state < LAST) begin // or
-                  o_busy <= 1'b1; // o_busy is turned ON
-                  state <= state_t'(state + 4'd1); // Increment to the next state (counting up)
-                  // Shift right for more data, and 1'b1 in from the left
-                  data_reg <= {1'b1, data_reg[9:1]};
-              end
-                   else begin // If at LAST,
-                     // when the state reaches LAST, stay busy for one more cycle,
-                     // but reset the state to IDLE
-                   {o_busy, state} <= {1'b1, IDLE};
-                   end
-  assign o_uart_tx = data_reg[0];
-  assign baud_stb = (counter == 0);
+  initial {o_busy, current_state} = {1'b0, IDLE}; // By default, set o_busy to off, and the state IDLE
 endmodule // hello_world
