@@ -34,27 +34,28 @@
 // The start bit sits at position 0, and 1's shift in from the left naturally becoming the stop bit
 
 module hello_world (
-                    input logic i_wr, i_clk, i_data [7:0],
-                    output logic o_busy, o_uart_tx
+                    input logic       i_wr,
+                    input logic       i_clk,
+                    input logic [7:0] i_data, // 8-bit input
+                    output logic      o_busy,
+                    output logic      o_uart_tx
                     );
-
-  typedef enum logic [7:0] {
+  parameter    CLOCKS_PER_BAUD = 868; // 100MHz / 115200 baud
+  
+  typedef enum logic [3:0] {
                 IDLE = 4'b0000, // IDLE = 0
                 START = 4'b0001, // START = 1
                 LAST = 4'd10 // LAST = 10
                 } state;
-  state current_state, next_state;
-
-  // Clock divider example
-  initial counter = 0;
-  logic [9:0] counter;
+  state is_state ; // Declare state register
+ 
+  // Signal declarations
+  logic [23:0] counter;
   logic [8:0] lcl_data;
-  logic [23:0] count;
-  logic baud_stb;
-  // Store the byte to transit
-  logic [9:0] data_reg; // data_reg holds: start + 8-bit data + stop
+  logic       baud_stb;
   
-  parameter    CLOCKS_PER_BAUD = 868; // 100MHz / 115200 baud
-
-  initial {o_busy, current_state} = {1'b0, IDLE}; // By default, set o_busy to off, and the state IDLE
+  // Store the byte to transit
+  initial counter = 0;
+  
+  initial {o_busy, is_state} = {1'b0, IDLE}; // By default, set o_busy to off, and the state IDLE
 endmodule // hello_world
