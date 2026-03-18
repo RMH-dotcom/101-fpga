@@ -40,6 +40,9 @@ module hello_world (
                     output logic      o_busy,
                     output logic      o_uart_tx
                     );
+  // My FPGA ticks 100 million times per second. A UART receiver only expects 115200
+  // bits per second. This number (868) is how many clock ticks must pass before I
+  // send the next bit.
   parameter    CLOCKS_PER_BAUD = 868; // 100MHz / 115200 baud
   
   typedef enum logic [3:0] {
@@ -47,7 +50,7 @@ module hello_world (
                 START = 4'b0001, // START = 1
                 LAST = 4'd10 // LAST = 10
                 } state;
-  state is_state ; // Declare state register
+  state is_state ; // Declare state register (where I am in the transmission sequence)
  
   // Signal declarations
   logic [23:0] counter;
@@ -58,4 +61,20 @@ module hello_world (
   initial counter = 0;
   
   initial {o_busy, is_state} = {1'b0, IDLE}; // By default, set o_busy to off, and the state IDLE
+  
+// Block 3: Counter
+// if (i_wr && !o_busy)     -> reset counter, baud_stb = 0
+// else if (!baud_stb)      -> count down
+// else if (state != IDLE)  -> reload counter
+  always_ff @(posedge i_clk)
+    if (i_wr && !o_busy) begin
+      counter <= CLOCKS_PER_BAUD - 1'b1; // Begin counting down from 857
+      baud_stb <= 1'b0; // Upon reaching 0, wait for receiver's signal
+    end
+    else if (!baud_stb) begin
+      counter <= counter - 1'b1; // Keep counting down
+      baud_stb <= (counter == 24'h1); // Has the counter hit 0 now?
+    end
+    else if (is_state != IDLE) // If baud tick fired in mid-transition,
+      counter <= CLOCKS_PER_BAUD - 1'b1; // Reload the counter
 endmodule // hello_world
