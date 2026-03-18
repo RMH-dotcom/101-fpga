@@ -61,6 +61,24 @@ module hello_world (
   initial counter = 0;
   
   initial {o_busy, is_state} = {1'b0, IDLE}; // By default, set o_busy to off, and the state IDLE
+
+// Block 1: State machine (gated by baud_stb)
+// if (i_wr && !o_busy) -> start
+// else if (baud_stb)   -> advance state
+// The state machine doesn't know about the counter at all -- it just waits for baud_stb to say "go!"
+  always_ff @(posedge i_clk)
+    if (i_wr && !o_busy) // Upon receiving a request,
+      {o_busy, is_state} <= {1'b1, START}; // Become busy, and enter START state
+    else if (baud_stb) begin
+      if (is_state == IDLE) // Case 1: if IDLE,
+        {o_busy, is_state} <= {1'b0, IDLE}; // then do nothing and clear busy
+      else if (is_state < LAST) begin // Case 2: If we're at mid-transmission,
+        o_busy <= 1'b1;
+        is_state <= state'(is_state + 1); // then let block 1 advance the state
+      end
+           else // Case 3: If LAST,
+             {o_busy, is_state} <= {1'b1, IDLE}; // return to IDLE and wait for new signal
+    end
   
 // Block 3: Counter
 // if (i_wr && !o_busy)     -> reset counter, baud_stb = 0
