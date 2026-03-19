@@ -7,6 +7,13 @@
 // 3. Clean up the Verilator work
 // 4. Simulate a serial port receiver
 
+// The full picture:
+// - Block 3 counts 867→0, fires baud_stb each time it hits 0     
+// - baud_stb fires 10 times per character (start + 8 data + stop)
+// - Each fire: Block 1 advances is_state, Block 2 shifts lcl_data
+// - On the 10th fire (LAST state): Block 1 sets is_state = IDLE, clears o_busy
+// - lcl_data[0] → o_uart_tx the whole time
+
 // A serial transmission:
 // - Idles high
 // - Begins with a start bit (low), ends with stop bit (high)
@@ -15,20 +22,6 @@
 // After:
 // - Ten states to the state machine
 // - Will still need to slow it down later
-
-// Block 1: State machine (gated by baud_stb)
-// if (i_wr && !o_busy) -> start
-// else if (baud_stb)   -> advance state
-// The state machine doesn't know about the counter at all -- it just waits for baud_stb to say "go!"
-
-// Block 2: Data register (also gated by baud_stb)
-// if (i_wr && !o_busy)  -> load data
-// else if (baud_stb)    -> shift right
-
-// Block 3: Counter
-// if (i_wr && !o_busy)     -> reset counter, baud_stb = 0
-// else if (!baud_stb)      -> count down
-// else if (state != IDLE)  -> reload counter
 
 // Important: Dan uses a 9-bit lcl_data (not 10). He loads {i_data, 1'b0}
 // The start bit sits at position 0, and 1's shift in from the left naturally becoming the stop bit
@@ -57,12 +50,40 @@ module hello_world (
   logic [8:0] lcl_data;
   logic       baud_stb;
   
-  // Store the byte to transit
   initial counter = 0;
-  
+  initial baud_stb = 1'b1;
+  initial lcl_data = 9'h1ff;
   initial {o_busy, is_state} = {1'b0, IDLE}; // By default, set o_busy to off, and the state IDLE
 
-// Block 1: State machine (gated by baud_stb)
+// Block 1: Counter
+// if (i_wr && !o_busy)     -> reset counter, baud_stb = 0
+// else if (!baud_stb)      -> count down
+// else if (state != IDLE)  -> reload counter
+  always_ff @(posedge i_clk)
+    if (i_wr && !o_busy) begin
+      counter <= CLOCKS_PER_BAUD - 1'b1; // Begin counting down from 867
+      baud_stb <= 1'b0; // Upon reaching 0, wait for receiver's signal
+    end
+    else if (!baud_stb) begin
+      counter <= counter - 1'b1; // Keep counting down
+      baud_stb <= (counter == 24'h1); // Has the counter hit 0 now?
+    end
+    else if (is_state != IDLE) // If baud tick fired in mid-transition,
+      counter <= CLOCKS_PER_BAUD - 1'b1; // Reload the counter
+  
+// Block 2: Data register (also gated by baud_stb)
+// if (i_wr && !o_busy)  -> load data
+// else if (baud_stb)    -> shift right
+  always_ff @(posedge i_clk)
+  if (i_wr && !o_busy) begin
+    lcl_data <= {i_data, 1'b0};
+  end
+  else if (baud_stb) begin
+    lcl_data <= {1'b1, lcl_data[8:1]};
+  end
+  assign o_uart_tx = lcl_data[0];
+  
+// Block 3: State machine (gated by baud_stb)
 // if (i_wr && !o_busy) -> start
 // else if (baud_stb)   -> advance state
 // The state machine doesn't know about the counter at all -- it just waits for baud_stb to say "go!"
@@ -79,20 +100,4 @@ module hello_world (
            else // Case 3: If LAST,
              {o_busy, is_state} <= {1'b1, IDLE}; // return to IDLE and wait for new signal
     end
-  
-// Block 3: Counter
-// if (i_wr && !o_busy)     -> reset counter, baud_stb = 0
-// else if (!baud_stb)      -> count down
-// else if (state != IDLE)  -> reload counter
-  always_ff @(posedge i_clk)
-    if (i_wr && !o_busy) begin
-      counter <= CLOCKS_PER_BAUD - 1'b1; // Begin counting down from 857
-      baud_stb <= 1'b0; // Upon reaching 0, wait for receiver's signal
-    end
-    else if (!baud_stb) begin
-      counter <= counter - 1'b1; // Keep counting down
-      baud_stb <= (counter == 24'h1); // Has the counter hit 0 now?
-    end
-    else if (is_state != IDLE) // If baud tick fired in mid-transition,
-      counter <= CLOCKS_PER_BAUD - 1'b1; // Reload the counter
 endmodule // hello_world
