@@ -26,7 +26,7 @@
 // Important: Dan uses a 9-bit lcl_data (not 10). He loads {i_data, 1'b0}
 // The start bit sits at position 0, and 1's shift in from the left naturally becoming the stop bit
 
-module hello_world (
+module tx_uart (
                     input logic       i_wr,
                     input logic       i_clk,
                     input logic [7:0] i_data, // 8-bit input
@@ -81,7 +81,7 @@ module hello_world (
   else if (baud_stb) begin
     lcl_data <= {1'b1, lcl_data[8:1]};
   end
-  assign o_uart_tx = lcl_data[0];
+  assign o_uart_tx = lcl_data[0]; // Which index position the tx is at
   
 // Block 3: State machine (gated by baud_stb)
 // if (i_wr && !o_busy) -> start
@@ -100,4 +100,4 @@ module hello_world (
            else // Case 3: If LAST,
              {o_busy, is_state} <= {1'b1, IDLE}; // return to IDLE and wait for new signal
     end
-endmodule // hello_world
+endmodule // tx_uart
