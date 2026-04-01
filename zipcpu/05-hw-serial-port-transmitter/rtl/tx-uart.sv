@@ -8,7 +8,7 @@
 // 4. Simulate a serial port receiver
 
 // The full picture:
-// - Block 3 counts 867→0, fires baud_stb each time it hits 0     
+// - Block 3 counts 867→0, fires baud_stb each time it hits 0
 // - baud_stb fires 10 times per character (start + 8 data + stop)
 // - Each fire: Block 1 advances is_state, Block 2 shifts lcl_data
 // - On the 10th fire (LAST state): Block 1 sets is_state = IDLE, clears o_busy
@@ -37,19 +37,19 @@ module tx_uart (
   // bits per second. This number (868) is how many clock ticks must pass before I
   // send the next bit.
   parameter    CLOCKS_PER_BAUD = 868; // 100MHz / 115200 baud
-  
+
   typedef enum logic [3:0] {
                 IDLE = 4'b0000, // IDLE = 0
                 START = 4'b0001, // START = 1
                 LAST = 4'd10 // LAST = 10
                 } state;
   state is_state ; // Declare state register (where I am in the transmission sequence)
- 
+
   // Signal declarations
   logic [23:0] counter;
   logic [8:0] lcl_data;
   logic       baud_stb;
-  
+
   initial counter = 0;
   initial baud_stb = 1'b1;
   initial lcl_data = 9'h1ff;
@@ -70,7 +70,7 @@ module tx_uart (
     end
     else if (is_state != IDLE) // If baud tick fired in mid-transition,
       counter <= CLOCKS_PER_BAUD - 1'b1; // Reload the counter
-  
+
 // Block 2: Data register (also gated by baud_stb)
 // if (i_wr && !o_busy)  -> load data
 // else if (baud_stb)    -> shift right
@@ -82,7 +82,7 @@ module tx_uart (
     lcl_data <= {1'b1, lcl_data[8:1]};
   end
   assign o_uart_tx = lcl_data[0]; // Which index position the tx is at
-  
+
 // Block 3: State machine (gated by baud_stb)
 // if (i_wr && !o_busy) -> start
 // else if (baud_stb)   -> advance state
