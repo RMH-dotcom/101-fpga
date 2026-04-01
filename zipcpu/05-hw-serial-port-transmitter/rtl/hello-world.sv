@@ -16,16 +16,20 @@ module hello_world (
   logic [7:0]  tx_data;
   logic        tx_stb;
   logic        tx_busy;
+  logic        tx_restart;
   initial TIMER = 0;
   initial character_index = 0;
   initial tx_stb = 0;
+  initial tx_restart = 0;
 
   // Block 1: Counter/timer
   // if TIMER == 0  -> reset timer
   // else TIMER - 1 -> resume timer
-  always_ff @(posedge i_clk)
-    if (TIMER == 0)
-      TIMER <= 100_000_000 - 1;
+  always_ff @(posedge i_clk) begin
+    if (TIMER == 0) // If timer is off,
+      TIMER <= 100_000_000 - 1'b1; // Begin counting down from 100M ticks
     else
-      TIMER <= TIMER - 1;
+      TIMER <= TIMER - 1'b1;
+    tx_restart <= (TIMER == 1); // Always runs, every clock
+  end
 endmodule // hello_world
