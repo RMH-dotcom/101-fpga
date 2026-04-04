@@ -32,4 +32,16 @@ module hello_world (
       TIMER <= TIMER - 1'b1;
     tx_restart <= (TIMER == 1); // Always runs, every clock
   end
+
+  // Block 2: Character index tracker (gated by tx_restart)
+  // if tx_restart          -> send characters (tx_stb = 1)
+  // if tx_stb && !tx_busy  -> advance index
+  // if last character sent -> stop (tx_stb = 0)
+  always_ff @(posedge i_clk) begin
+    if (tx_restart)
+      tx_stb <= 1;
+    else if (tx_stb && !tx_busy)
+      tx_stb <= 0;
+  end
+
 endmodule // hello_world
