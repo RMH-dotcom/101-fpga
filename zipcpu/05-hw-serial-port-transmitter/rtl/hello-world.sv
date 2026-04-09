@@ -50,6 +50,7 @@ module hello_world (
   // Block 3: Lookup table
   always_ff @(posedge i_clk)
     case (character_index)
+      default: tx_data <= 8'h0;
       4'h0: tx_data <= "H";
       4'h1: tx_data <= "e";
       4'h2: tx_data <= "l";
@@ -67,5 +68,12 @@ module hello_world (
     endcase // case (character_index)
 
   // Block 4: Instantiating tx_uart
+  tx_uart transmitter (
+                       .i_clk(i_clk),
+                       .i_wr(tx_stb),
+                       .i_data(tx_data),
+                       .o_uart_tx(o_uart_tx),
+                       .o_busy(tx_busy)
+                       );
 
 endmodule // hello_world
