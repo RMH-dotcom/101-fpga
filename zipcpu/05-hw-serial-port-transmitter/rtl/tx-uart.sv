@@ -95,7 +95,7 @@ module tx_uart (
         {o_busy, is_state} <= {1'b0, IDLE}; // then do nothing and clear busy
       else if (is_state < LAST) begin // Case 2: If we're at mid-transmission,
         o_busy <= 1'b1;
-        is_state <= state'(is_state + 1); // then let block 1 advance the state
+        is_state <= state'(is_state + 4'd1); // then let block 1 advance the state
       end
            else // Case 3: If LAST,
              {o_busy, is_state} <= {1'b1, IDLE}; // return to IDLE and wait for new signal
