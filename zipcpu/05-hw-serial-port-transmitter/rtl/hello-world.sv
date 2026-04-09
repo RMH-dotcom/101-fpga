@@ -40,8 +40,32 @@ module hello_world (
   always_ff @(posedge i_clk) begin
     if (tx_restart)
       tx_stb <= 1;
-    else if (tx_stb && !tx_busy)
-      tx_stb <= 0;
+    else if (tx_stb && !tx_busy) begin
+      character_index <= character_index + 1;
+      if (character_index == 4'hf) // if at last character,
+        tx_stb <= 0; // then stop
+    end
   end
+
+  // Block 3: Lookup table
+  always_ff @(posedge i_clk)
+    case (character_index)
+      4'h0: tx_data <= "H";
+      4'h1: tx_data <= "e";
+      4'h2: tx_data <= "l";
+      4'h3: tx_data <= "l";
+      4'h4: tx_data <= "o";
+      4'h5: tx_data <= " ";
+      4'h6: tx_data <= "W";
+      4'h7: tx_data <= "o";
+      4'h8: tx_data <= "r";
+      4'h9: tx_data <= "l";
+      4'ha: tx_data <= "d";
+      4'hb: tx_data <= "!";
+      4'hc: tx_data <= "\r";
+      4'hd: tx_data <= "\n";
+    endcase // case (character_index)
+
+  // Block 4: Instantiating tx_uart
 
 endmodule // hello_world
