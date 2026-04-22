@@ -2,15 +2,9 @@
 # even at infinite cycles, the hdl is valid.
 # Is o_led one-hot for infinite/unbounded cycles, but we are bounding them to 20 here
 
-[tasks]
-prf
-cvr
-
 [options]
-prf: mode bmc
-prf: depth 20
-cvr: mode cover
-cvr: depth 20
+mode bmc
+depth 20
 
 [engines]
 smtbmc z3 # Which "solver" backend to use

@@ -3,8 +3,8 @@ prf
 cvr
 
 [options]
-# prf (prove): Checks if the .sv never breaks. If there's no failure, even at infinite cycles,
-# the hdl is valid
+# prf (prove): Checks if the .sv never breaks. If there's no failure,
+# even at infinite cycles, the hdl is valid.
 # Is o_led one-hot for infinite/unbounded cycles, but we are bounding them to 20 here
 prf: mode bmc # Verification mode checking
 prf: depth 20 # how many clock cycles (from 0 to 1 to 0) to check
