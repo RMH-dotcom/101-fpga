@@ -1,0 +1,8 @@
+# running in tx_uart_cvr/src/
+read -formal tx_uart.sv # Read the RTL with formal defines enabled
+prep -top tx_uart # Specify top module. Synthesise and prepare module for verification
+
+hierarchy -smtcheck
+rename -witness
+write_jny -no-connections ../model/design.json
+write_rtlil ../model/design.il

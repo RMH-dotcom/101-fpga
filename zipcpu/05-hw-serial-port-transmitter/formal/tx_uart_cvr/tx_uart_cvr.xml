@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+<testsuite timestamp="2026-04-22T14:32:27" hostname="nixos" package="tx_uart" id="0" name="cvr" tests="4" errors="0" failures="0" time="0" skipped="4">
+<properties>
+<property name="os" value="Linux"/>
+<property name="expect" value="PASS"/>
+<property name="status" value="PASS"/>
+</properties>
+<testcase classname="cvr" name="build execution" time="0">
+</testcase>
+<testcase classname="cvr" name="Property ASSERT in tx_uart at tx_uart.sv:113.5-113.39" time="0" type="ASSERT" location="tx_uart.sv:113.5-113.39" id="_witness_.check_assert_tx_uart_sv_113_19">
+<skipped />
+</testcase>
+<testcase classname="cvr" name="Property ASSERT in tx_uart at tx_uart.sv:117.7-117.21" time="0" type="ASSERT" location="tx_uart.sv:117.7-117.21" id="_witness_.check_assert_tx_uart_sv_117_24">
+<skipped />
+</testcase>
+<testcase classname="cvr" name="Property ASSERT in tx_uart at tx_uart.sv:121.7-121.32" time="0" type="ASSERT" location="tx_uart.sv:121.7-121.32" id="_witness_.check_assert_tx_uart_sv_121_27">
+<skipped />
+</testcase>
+<testcase classname="cvr" name="Property ASSERT in tx_uart at tx_uart.sv:123.7-123.32" time="0" type="ASSERT" location="tx_uart.sv:123.7-123.32" id="_witness_.check_assert_tx_uart_sv_123_30">
+<skipped />
+</testcase>
+<system-out>SBY 14:32:27 [tx_uart_prf] Removing directory '/home/nixoslaptopmak/Projects/101/fpga/zipcpu/05-hw-serial-port-transmitter/formal/tx_uart_prf'.
+SBY 14:32:27 [tx_uart_cvr] Removing directory '/home/nixoslaptopmak/Projects/101/fpga/zipcpu/05-hw-serial-port-transmitter/formal/tx_uart_cvr'.
+SBY 14:32:27 [tx_uart_cvr] Copy '/home/nixoslaptopmak/Projects/101/fpga/zipcpu/05-hw-serial-port-transmitter/formal/../rtl/tx_uart.sv' to '/home/nixoslaptopmak/Projects/101/fpga/zipcpu/05-hw-serial-port-transmitter/formal/tx_uart_cvr/src/tx_uart.sv'.
+SBY 14:32:27 [tx_uart_cvr] engine_0: smtbmc z3
+SBY 14:32:27 [tx_uart_cvr] base: starting process &quot;cd tx_uart_cvr/src; /nix/store/k73pzx067mxfqnhbyvsi49170dmd10zs-yosys-0.55/bin/yosys -ql ../model/design.log ../model/design.ys&quot;
+SBY 14:32:27 [tx_uart_cvr] base: finished (returncode=0)
+SBY 14:32:27 [tx_uart_cvr] prep: starting process &quot;cd tx_uart_cvr/model; /nix/store/k73pzx067mxfqnhbyvsi49170dmd10zs-yosys-0.55/bin/yosys -ql design_prep.log design_prep.ys&quot;
+SBY 14:32:27 [tx_uart_cvr] prep: finished (returncode=0)
+SBY 14:32:27 [tx_uart_cvr] smt2: starting process &quot;cd tx_uart_cvr/model; /nix/store/k73pzx067mxfqnhbyvsi49170dmd10zs-yosys-0.55/bin/yosys -ql design_smt2.log design_smt2.ys&quot;
+SBY 14:32:27 [tx_uart_cvr] smt2: finished (returncode=0)
+SBY 14:32:27 [tx_uart_cvr] engine_0: starting process &quot;cd tx_uart_cvr; /nix/store/k73pzx067mxfqnhbyvsi49170dmd10zs-yosys-0.55/bin/yosys-smtbmc -s z3 --presat -c --noprogress -t 20  --append 0 --dump-vcd engine_0/trace%.vcd --dump-yw engine_0/trace%.yw --dump-vlogtb engine_0/trace%_tb.v --dump-smtc engine_0/trace%.smtc model/design_smt2.smt2&quot;
+SBY 14:32:27 [tx_uart_cvr] engine_0: ##   0:00:00  Solver: z3
+SBY 14:32:27 [tx_uart_cvr] engine_0: ##   0:00:00  Status: passed
+SBY 14:32:27 [tx_uart_cvr] engine_0: finished (returncode=0)
+SBY 14:32:27 [tx_uart_cvr] engine_0: Status returned by engine: pass
+SBY 14:32:27 [tx_uart_cvr] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 14:32:27 [tx_uart_cvr] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 14:32:27 [tx_uart_cvr] summary: engine_0 (smtbmc z3) returned pass
+SBY 14:32:27 [tx_uart_cvr] summary: engine_0 did not produce any traces
+SBY 14:32:27 [tx_uart_cvr] DONE (PASS, rc=0)
+</system-out>
+<system-err>
+</system-err>
+</testsuite>
+</testsuites>

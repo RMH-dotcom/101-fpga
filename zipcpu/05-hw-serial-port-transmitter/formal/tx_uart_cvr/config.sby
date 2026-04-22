@@ -2,22 +2,16 @@
 # even at infinite cycles, the hdl is valid.
 # Is o_led one-hot for infinite/unbounded cycles, but we are bounding them to 20 here
 
-[tasks]
-prf
-cvr
-
 [options]
-prf: mode bmc
-prf: depth 20
-cvr: mode cover
-cvr: depth 20
+mode cover
+depth 20
 
 [engines]
 smtbmc z3 # Which "solver" backend to use
 
 [script]
-read -formal tx-uart.sv # Read the RTL with formal defines enabled
+read -formal tx_uart.sv # Read the RTL with formal defines enabled
 prep -top tx_uart # Specify top module. Synthesise and prepare module for verification
 
 [files]
-../rtl/tx-uart.sv
+../rtl/tx_uart.sv
