@@ -47,7 +47,7 @@ module spi_master
    // - the ↓ falling | is the trailing (second) edge.
 
    // Clock Phase (CPHA)
-   // - CPHA's job is to decide which clock edge to use, FOR the above CPOL states.
+   // - CPHA's job is to decide which clock edge TO use, FOR the above CPOL states.
    // - CPHA 0: Data sampled on the LEADING edge (1st edge after CS goes low).
    // - CPHA 1: Data sampled on the TRAILING edge (2nd edge).
    // - Which physical edge (↑ or ↓) is "leading" depends on CPOL.
@@ -69,3 +69,22 @@ module spi_master
    input        i_clk,
    input        i_rst_l
    );
+
+  // The module need to track:
+  // 1. Clock generation - how do I divide the system clock down to sclk?
+  // 2. Edge detection - how does logic know when a trailing/leading edge has
+  // occured
+  // 3. Bit counting - how does it know which of the 8 bits it's currently
+  // sending/receiving?
+  // 4. Data rgisters - where does it hold the TX byte while shifting it out, and
+  // accumulate the RX byte shifting in?
+
+  reg [7:0]    r_clk_count;        // clock counter
+  reg          r_trailing;         // trailing edge flag
+  reg          r_leading;          // leading edge flag
+  reg [2:0]    r_bit_count;        // bit counter
+  reg [7:0]    r_tx_byte;          // tx shift register
+  reg [7:0]    r_rx_byte;          // rx shift register
+
+  // Block 1: sclk generation
+endmodule
