@@ -86,5 +86,48 @@ module spi_master
   reg [7:0]    r_tx_byte;          // tx shift register
   reg [7:0]    r_rx_byte;          // rx shift register
 
-  // Block 1: sclk generation
+  // Block 1: sclk generator
+  always_ff @(posedge i_clk or negedge i_rst_l) begin
+    if (!i_rst_l)
+      begin // reset everything to 0
+        r_leading <= 1'b0;
+        r_trailing <= 1'b0;
+        r_clk_count <= 1'b0;
+        o_sclk <= 1'b0; // CPOL begins at 0
+      end
+    else
+      if (o_cs_n == 1'b0) // if cs is pulsing at 0
+        begin
+          if (r_clk_count == clks_per_half_bit - 1)
+            begin
+              r_clk_count <= 1'b0; // reset the counter to 0 (channelled)
+              o_sclk      <= ~o_sclk; // immediately invert the voltage (0 to 1)
+
+              // implementing the leading edge
+              case (o_sclk)
+                1'b0 :
+                  begin
+                    r_leading <= 1'b1;
+                    r_trailing <= 1'b0;
+                  end
+                1'b1 :
+                  begin
+                    r_leading <= 1'b0;
+                    r_trailing <= 1'b1;
+                  end
+              endcase
+            end // if (r_clk_count == clks_per_half_bit - 1)
+          else
+            begin
+              r_clk_count <= r_clk_count + 1'b1;
+              r_leading <= 1'b0;
+              r_trailing <= 1'b0;
+            end
+        end // if (o_cs_n == 1'b0)
+      else
+        begin
+          r_leading <= 1'b0;
+          r_trailing <= 1'b0;
+        end
+  end
 endmodule
