@@ -129,5 +129,33 @@ module spi_master
           r_leading <= 1'b0;
           r_trailing <= 1'b0;
         end
-  end
+  end // always_ff @ (posedge i_clk or negedge i_rst_l)
+
+  // Block 2: TX path (shift register)
+  // Start (i_tx_dv): load the 8-bit byte into the register. Bit 7 first.
+  // Reload (r_trailing): shift everything one slot to the left.
+  // Output (o_mosi): permanently wire the bit 7 slot to the exit.
+  always_ff @(posedge i_clk or negedge i_rst_l)
+    if (!i_rst_l)
+      begin
+        r_tx_byte <= 8'b0;
+        o_tx_ready <= 1'b1;
+        o_mosi <= 1'b0;
+      end
+    else
+      begin
+        if (i_tx_dv && o_tx_ready)
+          begin
+            r_tx_byte <= i_tx_byte; // add the input to the inventory
+            o_mosi <= i_tx_byte[7]; // begin at bit 7 immediately
+            o_tx_ready <= 1'b0; // become busy
+          end
+        if (r_trailing == 1'b1)
+          begin // as bit 7 has been used, begin cycling down the chamber
+            r_tx_byte <= {r_tx_byte[6:0], 1'b0};
+            o_mosi <= r_tx_byte[6];
+            if (r_bit_count == 7)
+              o_tx_ready <= 1'b1;
+          end
+      end
 endmodule
