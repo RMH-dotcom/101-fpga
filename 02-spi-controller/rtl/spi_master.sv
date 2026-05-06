@@ -1,6 +1,8 @@
 /* verilator lint_off DECLFILENAME */
 module spi_master
+  /* verilator lint_off UNUSEDPARAM */
   #(parameter spi_mode = 0,
+    /* verilator lint_on UNUSEDPARAM */
     parameter clks_per_half_bit = 2)
 
   (
@@ -53,21 +55,21 @@ module spi_master
    // - Which physical edge (↑ or ↓) is "leading" depends on CPOL.
 
    // User-facing
-   input [7:0]  i_tx_byte,  // send byte
-   input        i_tx_dv,    // *action* Fire! -> load action onto and transfer via mosi
-   output       o_tx_ready, // ready for 2nd wave (sclk)
-   output [7:0] o_rx_byte,  // receive loot from miso
-   output       o_rx_dv,
+   input [7:0]        i_tx_byte,  // send byte
+   input              i_tx_dv,    // *action* Fire! -> load action onto and transfer via mosi
+   output logic       o_tx_ready, // ready for 2nd wave (sclk)
+   output logic [7:0] o_rx_byte,  // receive loot from miso
+   output logic       o_rx_dv,
 
    // SPI-facing
-   output       o_cs_n,
-   output       o_sclk,
-   output       o_mosi,
-   input        i_miso,
+   output logic       o_cs_n,
+   output logic       o_sclk,
+   output logic       o_mosi,
+   input              i_miso,
 
    // General
-   input        i_clk,
-   input        i_rst_l
+   input              i_clk,
+   input              i_rst_l
    );
 
   // The module need to track:
@@ -83,7 +85,9 @@ module spi_master
   reg          r_trailing;         // trailing edge flag
   reg          r_leading;          // leading edge flag
   reg [2:0]    r_bit_count;        // bit counter
+  /* verilator lint_off UNUSEDSIGNAL */
   reg [7:0]    r_tx_byte;          // tx shift register
+  /* verilator lint_on UNUSEDSIGNAL */
   reg [7:0]    r_rx_byte;          // rx shift register
 
   // Block 1: sclk generator
@@ -92,7 +96,7 @@ module spi_master
       begin // reset everything to 0
         r_leading <= 1'b0;
         r_trailing <= 1'b0;
-        r_clk_count <= 1'b0;
+        r_clk_count <= 8'b0;
         o_sclk <= 1'b0; // CPOL begins at 0
       end
     else
@@ -100,7 +104,7 @@ module spi_master
         begin
           if (r_clk_count == clks_per_half_bit - 1)
             begin
-              r_clk_count <= 1'b0; // reset the counter to 0 (channelled)
+              r_clk_count <= 8'b0; // reset the counter to 0 (channelled)
               o_sclk      <= ~o_sclk; // immediately invert the voltage (0 to 1)
 
               // implementing the leading edge
@@ -157,5 +161,29 @@ module spi_master
             if (r_bit_count == 7)
               o_tx_ready <= 1'b1;
           end
+      end // else: !if(!i_rst_l)
+
+  // Block 3: MISO sampling
+  // Captures i_miso into r_rx_byte, increments r_bit_count
+  always_ff @(posedge i_clk or negedge i_rst_l)
+    if (!i_rst_l)
+      begin
+        r_rx_byte <= 8'b0;
+        r_bit_count <= 3'b0;
+        o_rx_dv <= 1'b0;
       end
+    else
+      begin
+        if (r_leading == 1'b1)
+          begin
+          r_rx_byte <= {i_miso, r_rx_byte[7:1]};
+          r_bit_count <= r_bit_count + 1'b1;
+          end
+        if (r_bit_count == 7)
+          o_rx_dv <= 1'b1;
+        else
+          o_rx_dv <= 1'b0;
+      end // else: !if(!i_rst_l)
+  assign o_cs_n = o_tx_ready;
+  assign o_rx_byte = r_rx_byte;
 endmodule
