@@ -4,7 +4,9 @@ module spi_slave
    input              i_cs_n,
    input              i_mosi,
    input              i_sclk,
+   /* verilator lint_off UNUSEDSIGNAL */
    input              i_clk,
+   /* verilator lint_on UNUSEDSIGNAL */
    input              i_rst_l,
    output logic [7:0] o_rx_byte,
    output logic       o_rx_dv,
@@ -35,4 +37,6 @@ module spi_slave
     end // always_ff @ (posedge i_sclk or negedge i_rst_l)
 
   // Block 2: MISO tx
+  assign o_miso = 1'b0;
+  assign o_rx_byte = r_rx_byte;
 endmodule
