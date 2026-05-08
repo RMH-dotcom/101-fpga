@@ -27,6 +27,12 @@ module spi_slave
           begin
             r_rx_byte <= {i_mosi, r_rx_byte[7:1]};
             r_bit_count <= r_bit_count + 1'b1;
+            if (r_bit_count == 7)
+              o_rx_dv <= 1'b1;
+            else
+              o_rx_dv <= 1'b0;
           end
-    end
+    end // always_ff @ (posedge i_sclk or negedge i_rst_l)
+
+  // Block 2: MISO tx
 endmodule
