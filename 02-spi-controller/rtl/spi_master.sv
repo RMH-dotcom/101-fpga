@@ -158,7 +158,7 @@ module spi_master
           begin // as bit 7 has been used, begin cycling down the chamber
             r_tx_byte <= {r_tx_byte[6:0], 1'b0};
             o_mosi <= r_tx_byte[6];
-            if (r_bit_count == 7)
+            if (r_bit_count == 0 && !o_tx_ready)
               o_tx_ready <= 1'b1;
           end
       end // else: !if(!i_rst_l)
