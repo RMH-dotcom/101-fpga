@@ -186,4 +186,9 @@ module spi_master
       end // else: !if(!i_rst_l)
   assign o_cs_n = o_tx_ready;
   assign o_rx_byte = r_rx_byte;
+
+`ifdef FORMAL
+  assert property (@(posedge i_clk) !o_cs_n |-> !o_tx_ready);
+  assert property (@(posedge i_clk) o_tx_ready |-> !o_mosi);
+`endif
 endmodule
