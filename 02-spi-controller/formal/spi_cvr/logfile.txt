@@ -1,13 +1,20 @@
-SBY 13:32:33 [spi_prf] Removing directory '/home/nixoslaptopmak/Projects/101/fpga/02-spi-controller/formal/spi_prf'.
-SBY 13:32:33 [spi_cvr] Removing directory '/home/nixoslaptopmak/Projects/101/fpga/02-spi-controller/formal/spi_cvr'.
-SBY 13:32:33 [spi_cvr] Copy '/home/nixoslaptopmak/Projects/101/fpga/02-spi-controller/formal/../rtl/spi_master.sv' to '/home/nixoslaptopmak/Projects/101/fpga/02-spi-controller/formal/spi_cvr/src/spi_master.sv'.
-SBY 13:32:33 [spi_cvr] engine_0: smtbmc z3
-SBY 13:32:33 [spi_cvr] base: starting process "cd spi_cvr/src; /nix/store/bnmv9wg73qarcaaj6fgp1xa85gkf9fs1-yosys-0.55/bin/yosys -ql ../model/design.log ../model/design.ys"
-SBY 13:32:33 [spi_cvr] base: ERROR: File `rtl/spi_master.sv' not found or is a directory
-SBY 13:32:33 [spi_cvr] base: finished (returncode=1)
-SBY 13:32:33 [spi_cvr] base: task failed. ERROR.
-SBY 13:32:33 [spi_cvr] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
-SBY 13:32:33 [spi_cvr] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
-SBY 13:32:33 [spi_cvr] summary: engine_0 (smtbmc z3) did not return a status
-SBY 13:32:33 [spi_cvr] summary: engine_0 did not produce any traces
-SBY 13:32:33 [spi_cvr] DONE (ERROR, rc=16)
+SBY 14:06:14 [spi_prf] Removing directory '/home/nixoslaptopmak/Projects/101/fpga/02-spi-controller/formal/spi_prf'.
+SBY 14:06:14 [spi_cvr] Removing directory '/home/nixoslaptopmak/Projects/101/fpga/02-spi-controller/formal/spi_cvr'.
+SBY 14:06:14 [spi_cvr] Copy '/home/nixoslaptopmak/Projects/101/fpga/02-spi-controller/formal/../rtl/spi_master.sv' to '/home/nixoslaptopmak/Projects/101/fpga/02-spi-controller/formal/spi_cvr/src/spi_master.sv'.
+SBY 14:06:14 [spi_cvr] engine_0: smtbmc z3
+SBY 14:06:14 [spi_cvr] base: starting process "cd spi_cvr/src; /nix/store/bnmv9wg73qarcaaj6fgp1xa85gkf9fs1-yosys-0.55/bin/yosys -ql ../model/design.log ../model/design.ys"
+SBY 14:06:14 [spi_cvr] base: finished (returncode=0)
+SBY 14:06:14 [spi_cvr] prep: starting process "cd spi_cvr/model; /nix/store/bnmv9wg73qarcaaj6fgp1xa85gkf9fs1-yosys-0.55/bin/yosys -ql design_prep.log design_prep.ys"
+SBY 14:06:14 [spi_cvr] prep: finished (returncode=0)
+SBY 14:06:14 [spi_cvr] smt2: starting process "cd spi_cvr/model; /nix/store/bnmv9wg73qarcaaj6fgp1xa85gkf9fs1-yosys-0.55/bin/yosys -ql design_smt2.log design_smt2.ys"
+SBY 14:06:14 [spi_cvr] smt2: finished (returncode=0)
+SBY 14:06:14 [spi_cvr] engine_0: starting process "cd spi_cvr; /nix/store/bnmv9wg73qarcaaj6fgp1xa85gkf9fs1-yosys-0.55/bin/yosys-smtbmc -s z3 --presat -c --noprogress -t 20  --append 0 --dump-vcd engine_0/trace%.vcd --dump-yw engine_0/trace%.yw --dump-vlogtb engine_0/trace%_tb.v --dump-smtc engine_0/trace%.smtc model/design_smt2.smt2"
+SBY 14:06:14 [spi_cvr] engine_0: ##   0:00:00  Solver: z3
+SBY 14:06:14 [spi_cvr] engine_0: ##   0:00:00  Status: passed
+SBY 14:06:14 [spi_cvr] engine_0: finished (returncode=0)
+SBY 14:06:14 [spi_cvr] engine_0: Status returned by engine: pass
+SBY 14:06:14 [spi_cvr] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 14:06:14 [spi_cvr] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 14:06:14 [spi_cvr] summary: engine_0 (smtbmc z3) returned pass
+SBY 14:06:14 [spi_cvr] summary: engine_0 did not produce any traces
+SBY 14:06:14 [spi_cvr] DONE (PASS, rc=0)

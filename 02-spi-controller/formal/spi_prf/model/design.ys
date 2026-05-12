@@ -1,5 +1,5 @@
 # running in spi_prf/src/
-read -formal rtl/spi_master.sv # Read the RTL with formal defines enabled
+read -formal spi_master.sv # Read the RTL with formal defines enabled
 prep -top spi_master # specify top module. Synthesise and prepare module for verification
 
 hierarchy -smtcheck

@@ -188,7 +188,19 @@ module spi_master
   assign o_rx_byte = r_rx_byte;
 
 `ifdef FORMAL
-  assert property (@(posedge i_clk) !o_cs_n |-> !o_tx_ready);
-  assert property (@(posedge i_clk) o_tx_ready |-> !o_mosi);
+  reg f_past_valid;
+  initial f_past_valid = 1'b0;
+
+  always @(*)
+    if (!f_past_valid) assume (!i_rst_l);
+
+  always_ff @(posedge i_clk)
+    f_past_valid <= 1'b1;
+
+  always_ff @(posedge i_clk)
+    if (f_past_valid && !o_cs_n) assert (!o_tx_ready);
+
+  always_ff @(posedge i_clk)
+    if (f_past_valid && o_tx_ready) assert (!o_sclk);
 `endif
 endmodule

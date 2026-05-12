@@ -188,7 +188,23 @@ module spi_master
   assign o_rx_byte = r_rx_byte;
 
 `ifdef FORMAL
-  assert property (@(posedge i_clk) !o_cs_n |-> !o_tx_ready);
-  assert property (@(posedge i_clk) o_tx_ready |-> !o_mosi);
+  // f_past_valid forces a reset state (0) on the very first cycle, and state 1 after
+  reg f_past_valid;
+  initial f_past_valid = 1'b0;
+
+  always @(*)
+    if (!f_past_valid) assume (!i_rst_l);
+
+  always_ff @(posedge i_clk)
+    f_past_valid <= 1'b1;
+
+  // When CS is low (active), the master must be busy (tx_ready=0)
+  always_ff @(posedge i_clk)
+    if (f_past_valid && !o_cs_n) assert (!o_tx_ready);
+
+  // When master is idle (o_tx_ready=1), SCLK must be low (CPOL=0)
+  // The transition ends on a trailing edge, so SCLK is 0 when CS deasserts
+  always_ff @(posedge i_clk)
+    if (f_past_valid && o_tx_ready) assert (!o_sclk);
 `endif
 endmodule
