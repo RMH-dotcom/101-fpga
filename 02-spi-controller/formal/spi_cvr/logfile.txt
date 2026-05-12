@@ -1,0 +1,13 @@
+SBY 13:32:33 [spi_prf] Removing directory '/home/nixoslaptopmak/Projects/101/fpga/02-spi-controller/formal/spi_prf'.
+SBY 13:32:33 [spi_cvr] Removing directory '/home/nixoslaptopmak/Projects/101/fpga/02-spi-controller/formal/spi_cvr'.
+SBY 13:32:33 [spi_cvr] Copy '/home/nixoslaptopmak/Projects/101/fpga/02-spi-controller/formal/../rtl/spi_master.sv' to '/home/nixoslaptopmak/Projects/101/fpga/02-spi-controller/formal/spi_cvr/src/spi_master.sv'.
+SBY 13:32:33 [spi_cvr] engine_0: smtbmc z3
+SBY 13:32:33 [spi_cvr] base: starting process "cd spi_cvr/src; /nix/store/bnmv9wg73qarcaaj6fgp1xa85gkf9fs1-yosys-0.55/bin/yosys -ql ../model/design.log ../model/design.ys"
+SBY 13:32:33 [spi_cvr] base: ERROR: File `rtl/spi_master.sv' not found or is a directory
+SBY 13:32:33 [spi_cvr] base: finished (returncode=1)
+SBY 13:32:33 [spi_cvr] base: task failed. ERROR.
+SBY 13:32:33 [spi_cvr] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 13:32:33 [spi_cvr] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 13:32:33 [spi_cvr] summary: engine_0 (smtbmc z3) did not return a status
+SBY 13:32:33 [spi_cvr] summary: engine_0 did not produce any traces
+SBY 13:32:33 [spi_cvr] DONE (ERROR, rc=16)

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+<testsuite timestamp="2026-05-12T13:32:33" hostname="nixos" package="spi" id="0" name="prf" tests="1" errors="1" failures="0" time="0" skipped="0">
+<properties>
+<property name="os" value="Linux"/>
+<property name="expect" value="PASS"/>
+<property name="status" value="ERROR"/>
+</properties>
+<testcase classname="prf" name="prf" time="0">
+<error type="ERROR"/>
+</testcase>
+<system-out>SBY 13:32:33 [spi_prf] Removing directory '/home/nixoslaptopmak/Projects/101/fpga/02-spi-controller/formal/spi_prf'.
+SBY 13:32:33 [spi_prf] Copy '/home/nixoslaptopmak/Projects/101/fpga/02-spi-controller/formal/../rtl/spi_master.sv' to '/home/nixoslaptopmak/Projects/101/fpga/02-spi-controller/formal/spi_prf/src/spi_master.sv'.
+SBY 13:32:33 [spi_prf] engine_0: smtbmc z3
+SBY 13:32:33 [spi_prf] base: starting process &quot;cd spi_prf/src; /nix/store/bnmv9wg73qarcaaj6fgp1xa85gkf9fs1-yosys-0.55/bin/yosys -ql ../model/design.log ../model/design.ys&quot;
+SBY 13:32:33 [spi_prf] base: ERROR: File `rtl/spi_master.sv' not found or is a directory
+SBY 13:32:33 [spi_prf] base: finished (returncode=1)
+SBY 13:32:33 [spi_prf] base: task failed. ERROR.
+SBY 13:32:33 [spi_prf] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 13:32:33 [spi_prf] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 13:32:33 [spi_prf] summary: engine_0 (smtbmc z3) did not return a status
+SBY 13:32:33 [spi_prf] summary: engine_0 did not produce any traces
+SBY 13:32:33 [spi_prf] DONE (ERROR, rc=16)
+</system-out>
+<system-err>
+</system-err>
+</testsuite>
+</testsuites>
