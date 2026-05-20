@@ -1,0 +1,12 @@
+
+{ 
+    crc :  2221975146201584342  , 
+    ccp_crc :  0  , 
+    cmdline : " --incr --debug typical --relax --mt 8 -L xil_defaultlib -L uvm -L unisims_ver -L unimacro_ver -L secureip --snapshot spi_top_hw_behav xil_defaultlib.spi_top_hw xil_defaultlib.glbl" , 
+    buildDate : "Sep 11 2025" , 
+    buildTime : "21:28:52" , 
+    linkCmd : "/home/nixoslaptopmak/Projects/Quant/xilinxvivado/2025.1.1/Vivado/lib/lnx64.o/../../tps/lnx64/gcc-9.3.0/bin/g++ -Wa,-W  -O -fPIC  -m64  -Wl,--no-as-needed  -Wl,--unresolved-symbols=ignore-all  -o \"xsim.dir/spi_top_hw_behav/xsimk\"   \"xsim.dir/spi_top_hw_behav/obj/xsim_0.lnx64.o\" \"xsim.dir/spi_top_hw_behav/obj/xsim_1.lnx64.o\" -L\"/home/nixoslaptopmak/Projects/Quant/xilinxvivado/2025.1.1/Vivado/lib/lnx64.o\" -lxv_simulator_kernel    -L/home/nixoslaptopmak/Projects/Quant/xilinxvivado/2025.1.1/Vivado/lib/lnx64.o/../../tps/lnx64/gcc-9.3.0/bin/../lib64 -Wl,--disable-new-dtags -Wl,-rpath=/home/nixoslaptopmak/Projects/Quant/xilinxvivado/2025.1.1/Vivado/lib/lnx64.o/../../tps/lnx64/gcc-9.3.0/bin/../lib64 -lxv_simbridge_kernel" , 
+    aggregate_nets : 
+    [ 
+    ] 
+} 

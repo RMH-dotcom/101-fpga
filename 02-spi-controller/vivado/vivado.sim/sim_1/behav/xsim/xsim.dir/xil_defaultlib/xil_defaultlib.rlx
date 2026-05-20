@@ -1,0 +1,7 @@
+0.7
+2020.2
+Sep 11 2025
+21:28:52
+/home/nixoslaptopmak/Projects/101/fpga/02-spi-controller/vivado/vivado.sim/sim_1/behav/xsim/glbl.v,1748340170,verilog,,,,glbl,,uvm,,,,,,
+/home/nixoslaptopmak/Projects/101/fpga/02-spi-controller/vivado/vivado.srcs/sources_1/imports/rtl/spi_master.sv,1778591434,systemVerilog,,/home/nixoslaptopmak/Projects/101/fpga/02-spi-controller/vivado/vivado.srcs/sources_1/imports/rtl/spi_top_hw.sv,,spi_master,,uvm,../../../../../../../../Quant/xilinxvivado/2025.1.1/data/rsb/busdef,,,,,
+/home/nixoslaptopmak/Projects/101/fpga/02-spi-controller/vivado/vivado.srcs/sources_1/imports/rtl/spi_top_hw.sv,1778681313,systemVerilog,,,,spi_top_hw,,uvm,../../../../../../../../Quant/xilinxvivado/2025.1.1/data/rsb/busdef,,,,,
