@@ -78,7 +78,7 @@ module spi_master
   // occured
   // 3. Bit counting - how does it know which of the 8 bits it's currently
   // sending/receiving?
-  // 4. Data rgisters - where does it hold the TX byte while shifting it out, and
+  // 4. Data registers - where does it hold the TX byte while shifting it out, and
   // accumulate the RX byte shifting in?
 
   reg [7:0]    r_clk_count;        // clock counter
