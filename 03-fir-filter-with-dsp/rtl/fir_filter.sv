@@ -23,6 +23,10 @@ module fir_filter
   // The oldest r_tap[15] gets overwritten and is gone, and the new sample goes into
   // r_tap[0]
   always_ff @(posedge i_clk) begin
+    for (int i = 15; i > 0; i--)begin
+      r_tap[i] <= r_tap[i-1];
+    end
+    r_tap[0] <= i_sample;
   end
 
   // Block 2: Multipliers
