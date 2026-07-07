@@ -26,6 +26,13 @@ module fir_filter
   logic [31:0] l_products [0:15];
   logic [35:0] l_regs [0:15];
 
+  localparam logic [15:0] l_coeffs [0:15] = '{
+                                               16'd4096, 16'd4096, 16'd4096, 16'd4096,
+                                               16'd4096, 16'd4096, 16'd4096, 16'd4096,
+                                               16'd4096, 16'd4096, 16'd4096, 16'd4096,
+                                               16'd4096, 16'd4096, 16'd4096, 16'd4096
+                                              };
+
   // Block 1: Multipliers
   // i_sample is directed to all 16 multipliers silmultaneously
   // Each (i_sample * i_coeff)
