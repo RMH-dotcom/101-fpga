@@ -36,14 +36,31 @@ module fir_filter
   // Block 1: Multipliers
   // i_sample is directed to all 16 multipliers silmultaneously
   // Each (i_sample * i_coeff)
-  always_comb begin
-    for (int i = 1'b0; i < 16; i++) begin
-      l_products[i] = i_sample * l_coeffs[i];
+  always_comb
+    begin
+      for (int i = 0; i < 16; i++)
+        begin
+          l_products[i] = i_sample * l_coeffs[i];
+        end
     end
-  end
 
   // Block 2: Accumulator
   // l_regs[i] <= l_products[i] + l_regs[prev i]
   // Final: output <= l_regs[final i] >> 16
+  always_ff @(posedge i_clk)
+    if (!i_rst)
+      begin
+        for (int i = 0; i < 16; i++)
+          l_regs[i] <= '0;
+        o_result <= 1'b0;
+      end
+    else
+      begin
+        l_regs[15] <= l_products[15];
 
-  endmodule // fir_filter
+        for (int i = 0; i < 15; i++)
+          l_regs[i] <= l_products[i] + l_regs[i+1];
+
+        o_result <= l_regs[0] >> 16;
+      end
+endmodule // fir_filter
