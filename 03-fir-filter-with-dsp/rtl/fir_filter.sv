@@ -12,7 +12,7 @@ module fir_filter
  // The main input belt (i_sample) hits a 16-way splitter.
  // It feeds all 16 assemblers simultaneously.
  // Each assembler has its own recipe module (p_coeff).
- // Every tick, they all output a fresh item into their output chest (products[i]).
+ // Every tick, they all output a fresh item into their respective output chests (products[i]).
 
  // The Inserters (The Adders):
  // The subsequent inserters are smart Filter Inserters combined with an Assembly function.
@@ -23,7 +23,7 @@ module fir_filter
   input [15:0]        i_sample,
   output logic [15:0] o_result
  );
-  logic [31:0] l_products [0:15];
+  logic [31:0] l_products [0:15]; // 32-bit wide, and there's 16 of them
   logic [35:0] l_regs [0:15];
 
   localparam logic [15:0] l_coeffs [0:15] = '{
@@ -36,6 +36,11 @@ module fir_filter
   // Block 1: Multipliers
   // i_sample is directed to all 16 multipliers silmultaneously
   // Each (i_sample * i_coeff)
+  always_comb begin
+    for (int i = 1'b0; i < 16; i++) begin
+      l_products[i] = i_sample * l_coeffs[i];
+    end
+  end
 
   // Block 2: Accumulator
   // l_regs[i] <= l_products[i] + l_regs[prev i]
