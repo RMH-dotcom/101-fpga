@@ -40,3 +40,6 @@ obj_dir/
 
 # Formal verification outputs
 formal/*/
+
+# Other
+.directory
