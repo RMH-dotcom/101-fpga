@@ -41,7 +41,7 @@ int main() {
     tfp->dump(contextp->time());
 
     // PASS/FAIL check
-    if (i >= 2 && i <= 17) {
+    if (i >= 1 && i <= 16) {
       if (dut->o_result == 2048)
         printf("Cycle %d: PASS: Got 2048\n", i);
       else
