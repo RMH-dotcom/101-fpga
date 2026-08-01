@@ -52,15 +52,15 @@ module fir_filter
       begin
         for (int i = 0; i < 16; i++)
           l_regs[i] <= '0;
-        o_result <= 1'b0;
+        o_result <= '0;
       end
     else
       begin
-        l_regs[15] <= l_products[15];
+      l_regs[15] <= 36'(l_products[15]);
 
         for (int i = 0; i < 15; i++)
-          l_regs[i] <= l_products[i] + l_regs[i+1];
+          l_regs[i] <= 36'(l_products[i]) + l_regs[i+1];
 
-        o_result <= l_regs[0] >> 16;
+        o_result <= 16'(l_regs[0] >> 16); // right-shift all register items by 16
       end
 endmodule // fir_filter
