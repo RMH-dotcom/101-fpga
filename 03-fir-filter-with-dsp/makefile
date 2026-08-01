@@ -6,7 +6,7 @@ BUILD_DIR = obj_dir
 
 # fir_filter
 RTL = $(RTL_DIR)/fir_filter.sv
-FORMAL = $(FORMAL_DIR)/fir.sby
+FORMAL = $(FORMAL_DIR)/fir_filter.sby
 TB = $(SIM_DIR)/tb_fir_filter.cpp
 SIM_EXEC = $(BUILD_DIR)/Vfir_filter
 
