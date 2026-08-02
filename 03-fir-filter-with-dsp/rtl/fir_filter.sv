@@ -20,13 +20,16 @@ module fir_filter
 
   input               i_clk,
   input               i_rst,
+  input               i_coeff_we, // write-enable
+  input               i_coeff_addr [3:0], // address
+  input               i_coeff_data [15:0], // data
   input [15:0]        i_sample,
   output logic [15:0] o_result
  );
   logic [31:0] l_products [0:15]; // 32-bit wide, and there's 16 of them
   logic [35:0] l_regs [0:15];
 
-  localparam logic [15:0] l_coeffs [0:15] = '{
+  logic [15:0] l_coeffs [0:15] = '{
                                                16'd4096, 16'd4096, 16'd4096, 16'd4096,
                                                16'd4096, 16'd4096, 16'd4096, 16'd4096,
                                                16'd4096, 16'd4096, 16'd4096, 16'd4096,
