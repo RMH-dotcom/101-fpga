@@ -32,8 +32,8 @@ int main() {
     contextp-> timeInc(1);
     dut->i_clk = 1;
     dut->eval();
-    if(i==0) dut->i_sample = 0;
     tfp->dump(contextp->time());
+    if(i==0) dut->i_sample = 0;
 
     contextp->timeInc(1);
     dut->i_clk = 0;
