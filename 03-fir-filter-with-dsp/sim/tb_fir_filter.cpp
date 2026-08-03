@@ -18,6 +18,11 @@ int main() {
   dut->i_clk = 0;
   dut->eval();
 
+  dut->i_clk = 1;  // posedge fires always_ff with reset asserted
+  dut->eval();
+  dut->i_clk = 0;
+  dut->eval();
+
   dut->i_rst = 1; // release reset
   dut->eval();
 
