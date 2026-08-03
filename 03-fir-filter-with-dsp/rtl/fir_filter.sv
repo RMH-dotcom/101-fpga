@@ -20,21 +20,15 @@ module fir_filter
 
   input               i_clk,
   input               i_rst,
-  input               i_coeff_we, // write-enable
-  input               i_coeff_addr [3:0], // address
-  input               i_coeff_data [15:0], // data
+  input               i_coeff_we,   // write-enable
+  input [3:0]         i_coeff_addr, // address
+  input [15:0]        i_coeff_data, // data
   input [15:0]        i_sample,
   output logic [15:0] o_result
  );
   logic [31:0] l_products [0:15]; // 32-bit wide, and there's 16 of them
   logic [35:0] l_regs [0:15];
-
-  logic [15:0] l_coeffs [0:15] = '{
-                                               16'd4096, 16'd4096, 16'd4096, 16'd4096,
-                                               16'd4096, 16'd4096, 16'd4096, 16'd4096,
-                                               16'd4096, 16'd4096, 16'd4096, 16'd4096,
-                                               16'd4096, 16'd4096, 16'd4096, 16'd4096
-                                              };
+  logic [15:0] l_coeffs [0:15];
 
   // Block 1: Multipliers
   // i_sample is directed to all 16 multipliers silmultaneously
@@ -54,12 +48,20 @@ module fir_filter
     if (!i_rst)
       begin
         for (int i = 0; i < 16; i++)
-          l_regs[i] <= '0;
+          begin
+            l_regs[i] <= '0;
+            l_coeffs[i] <= 16'd4096;
+          end
         o_result <= '0;
       end
     else
       begin
-      l_regs[15] <= 36'(l_products[15]);
+        if (i_coeff_we)
+          begin
+            l_coeffs[i_coeff_addr] <= i_coeff_data;
+          end
+
+        l_regs[15] <= 36'(l_products[15]);
 
         for (int i = 0; i < 15; i++)
           l_regs[i] <= 36'(l_products[i]) + l_regs[i+1];
