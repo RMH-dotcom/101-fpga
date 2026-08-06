@@ -18,13 +18,13 @@ module fir_filter
  // The subsequent inserters are smart Filter Inserters combined with an Assembly function.
  // Inserter 1 looks at the chest at Station 0 (regs[0]), grabs that item, combines it with the fresh item from Assembler 1 (products[1]), and drops the result into the chest at Station 1 (regs[1]).
 
-  input               i_clk,
-  input               i_rst,
-  input               i_coeff_we,   // write-enable
-  input [3:0]         i_coeff_addr, // address
-  input [15:0]        i_coeff_data, // data
-  input [15:0]        i_sample,
-  output logic signed [15:0] o_result
+ input                      i_clk,
+ input                      i_rst,
+ input                      i_coeff_we,   // write-enable
+ input [3:0]                i_coeff_addr, // address
+ input signed [15:0]        i_coeff_data, // data
+ input signed [15:0]        i_sample,
+ output logic signed [15:0] o_result
  );
   logic signed [31:0] l_products [0:15]; // 32-bit wide, and there's 16 of them
   logic signed [35:0] l_regs [0:15];
