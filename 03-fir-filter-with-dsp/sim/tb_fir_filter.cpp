@@ -26,7 +26,7 @@ int main() {
   dut->i_rst = 1; // release reset
   dut->eval();
 
-  dut->i_sample = 0x8000;
+  dut->i_sample = 0x7FFF;
 
   // Run clock for 40 cycles
   // 1. Advance time by 1
@@ -47,10 +47,10 @@ int main() {
 
     // PASS/FAIL check
     if (i >= 1 && i <= 16) {
-      if (dut->o_result == 2048)
-        printf("Cycle %d: PASS: Got 2048\n", i);
+      if (dut->o_result == 2047)
+        printf("Cycle %d: PASS: Got 2047\n", i);
       else
-        printf("Cycle %d: FAIL: expected 2048, got %d\n", i, dut->o_result);
+        printf("Cycle %d: FAIL: expected 2047, got %d\n", i, dut->o_result);
     } else {
       if (dut->o_result == 0)
         printf("Cycle %d: PASS: Got 0\n", i);
