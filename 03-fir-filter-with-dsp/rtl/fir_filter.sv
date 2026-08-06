@@ -24,11 +24,11 @@ module fir_filter
   input [3:0]         i_coeff_addr, // address
   input [15:0]        i_coeff_data, // data
   input [15:0]        i_sample,
-  output logic [15:0] o_result
+  output logic signed [15:0] o_result
  );
-  logic [31:0] l_products [0:15]; // 32-bit wide, and there's 16 of them
-  logic [35:0] l_regs [0:15];
-  logic [15:0] l_coeffs [0:15];
+  logic signed [31:0] l_products [0:15]; // 32-bit wide, and there's 16 of them
+  logic signed [35:0] l_regs [0:15];
+  logic signed [15:0] l_coeffs [0:15];
 
   // Block 1: Multipliers
   // i_sample is directed to all 16 multipliers silmultaneously
