@@ -67,5 +67,28 @@ module fir_filter
           l_regs[i] <= 36'(l_products[i]) + l_regs[i+1];
 
         o_result <= 16'(l_regs[0] >> 16); // right-shift all register items by 16
-      end
+      end // else: !if(!i_rst)
+
+`ifdef FORMAL
+  reg f_past_valid = 0;
+  always @(posedge i_clk)
+    f_past_valid <= 1;
+
+  // On cycle 0, reset must be asserted.
+  // After that first cycle, l_regs are all 0 and the bound holds inductively.
+  always @(*)
+    begin
+      if (!f_past_valid)
+        assume(!i_rst);
+    end
+
+  always @(posedge i_clk)
+    begin
+      if (f_past_valid)
+        begin
+          if ($past(!i_rst))
+            assert(o_result == 0);
+        end
+    end // always @ (posedge i_clk)
+`endif
 endmodule // fir_filter
