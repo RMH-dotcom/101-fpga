@@ -1,0 +1,22 @@
+# prf (prove): Checks if the .sv never "breaks". If there is no failure, even at
+# infinite cycles, the HDL is valid.
+
+[tasks]
+prf
+cvr
+
+[options]
+prf: mode prove
+prf: depth 20
+cvr: mode cover
+cvr: depth 20
+
+[engines]
+smtbmc yices
+
+[script]
+read -formal fir_filter.sv # Read the RTL with formal defines enabled
+prep -top fir_filter # specify top module. Synthesise and prepare module for verification
+
+[files]
+rtl/fir_filter.sv
