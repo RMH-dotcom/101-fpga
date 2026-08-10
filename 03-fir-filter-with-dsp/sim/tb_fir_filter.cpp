@@ -27,17 +27,6 @@ int main() {
   dut->i_rst = 1; // release reset
   dut->eval();
 
-  // golden_ref
-  // The coefficient memory is a chest with 16 slots. i_coeff_addr is which slot
-  // number you're pointing at.
-  // i_coeff_data is the item you're holding. i_coeff_we is the "insert" button — nothing goes in until you press it.
-
-  // To stock all 16 slots, you stand in front of the chest, point at slot 0,
-  // hold item 0, press insert, then point at slot 1, hold item 1, press insert
-  // — 16 times in a row. Each "press insert" is one clock edge with i_coeff_we
-  // = 1.  
-
-// Once all slots are stocked, you lower the insert button (i_coeff_we = 0) and start the conveyor belt (i_sample = 0x7FFF).
   int16_t h[16] = {
     -169,
     -107,
@@ -58,23 +47,23 @@ int main() {
   };
 
   for (int i = 0; i < 16; i++) {
-    dut->i_coeff_we   = 1;     // Turn the "Write Enable" switch ON
-    dut->i_coeff_addr = i;     // Set the destination station address index (0 to 15)
-    dut->i_coeff_data = h[i]; // Drop your signed recipe integer onto the data wire
+    dut->i_coeff_we = 1;
+    dut->i_coeff_addr = i;
+    dut->i_coeff_data = h[i];
 
-    // Drive the Falling Edge of the Clock    
     dut->i_clk = 0;
-    contextp->timeInc(1);      // Move world time forward by 1 tick
-    dut->eval();               // Hit Enter! Wires stabilize
+    contextp->timeInc(1);
+    dut->eval();
 
-    // Drive the Rising Edge of the Clock
     dut->i_clk = 1;
-    contextp->timeInc(1);      // Move world time forward by 1 tick
+    contextp->timeInc(1);
     dut->eval();
   }
   dut->i_coeff_we = 0;
   dut->i_sample = 0x7FFF;
 
+  // coeff loop ends clk high
+  // pull low so main loop's first rising edge is true  
   dut->i_clk = 0;
   dut->eval();
 
