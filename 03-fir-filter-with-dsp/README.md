@@ -89,6 +89,12 @@ These unique, quantised coefficients are loaded into the hardware core via the c
 
 Importantly, the system successfully tracks the signed impulse response of the windowed-sinc filter with zero quantisation or rounding drift, verifying the datapath's integrity.
 
+### Formal Verification
+Formal verification aimed to prove that after any cycle where reset is asserted, `o_result` would be 0 on the next cycle. SymbiYosys with Yices, k-induction, and depth 20 were used.
+
+Originally, the formal verification suite also included accumulator bound assertions. However, the automated proof timed out due to bitvector multiplication complexities, where the solver would still be active past 35 minutes.
+
+The bound is documented as a manual calculation: 16 × 32767² = 17,178,820,624, which is less than the 36-bit signed maximum of 34,359,738,367, which confirms that 36 bits is sufficient to accumulate 16 signed 32-bit products without overflow.
 
 ## Design Decisions
 
