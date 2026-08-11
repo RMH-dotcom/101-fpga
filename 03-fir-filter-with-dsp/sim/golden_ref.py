@@ -33,3 +33,43 @@ for t in range(32):
 
 print("Q16 Coefficients: \n", h_int16)
 print("Answer key: \n", y)
+
+h_ramp = np.arange(1, 17, dtype=np.int64)
+l_regs_python = np.zeros(num_taps, dtype=np.int64)
+
+for t in range(32):
+    sample = impulse_signal[t]
+
+    y[t] = l_regs_python[0] >> 16
+
+    next_regs = sample * h_ramp
+
+    for i in range(15):
+        next_regs[i] = (sample * h_ramp[i]) + l_regs_python[i+1]
+
+    l_regs_python = next_regs
+
+print("Q16 Coefficients: \n", h_ramp)
+print("Ramp answer key: \n", y)
+
+np.random.seed(42)
+stream = np.random.randint(-32768, 32767, size=40, dtype=np.int64)
+l_regs_python = np.zeros(num_taps, dtype=np.int64)
+stream = np.concatenate([stream, np.zeros(16, dtype=np.int64)])
+y_stream =np.zeros(56, dtype=np.int64)
+
+for t in range(56):
+    sample = stream[t]
+
+    y_stream[t] = l_regs_python[0] >> 16
+
+    next_regs = sample * h_int64
+
+    for i in range(15):
+        next_regs[i] = (sample * h_int64[i]) + l_regs_python[i+1]
+
+    l_regs_python = next_regs
+
+print("Q16 Coefficients: \n", h_int16)
+print("Stream answer key: \n", y_stream)
+print("Stream input: \n", stream[:40])
