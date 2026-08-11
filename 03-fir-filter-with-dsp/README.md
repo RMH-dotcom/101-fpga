@@ -69,7 +69,16 @@ OBUF: 16
 ```
 
 ### Timing Analysis Results
-No implementation timing data was retrieved because the number of unplaced ports exceeded the Zybo Z7-10's IO pin count (55 ports > 50 pins).
+Timing was analysed via Out-of-Context (OOC) implementation at a 100 MHz (10 ns) target clock. This is because the Zybo Z7-10 board clock is 125 MHz (8 ns). 100 MHz (10 ns) was chosen as a conservative target slightly below the board clock, to give the router a buffer zone and make the WNS result easy to interpret. The large positive WNS then confirms the design could comfortably close at the actual board frequency.
+
+OOC implementation was used because the design has 55 ports but the Zybo Z7-10 only exposes 50 user IO pins, so a full top-level implementation with physical pin constraints is impossible. OOC synthesis removes the IO placement requirement entirely, allowing Vivado to route and time the core logic in isolation.
+
+| Metric | Value |
+|---|---|
+| Target Clock | 100 MHz (10.000 ns) |
+| WNS | +4.844 ns |
+| Failing Endpoints | 0 / 1024 |
+| fmax | ~193.9 MHz |
 
 ## Verification
 
@@ -116,4 +125,4 @@ This is the key deliverable the aims of the project required. The reason for thi
 The testbench expectation was off by one cycle. 2 cycles of latency were incorrectly assumed, instead of one. As a result, cycles 1 and 17 failed. The actual latency is 1 cycle, not 2, because non-blocking assignments in `always_ff` mean `o_result` reads `l_regs[0]` from the previous clock edge. This was subsequently confirmed by the golden reference test, which independently predicted the same 1-cycle delay.
 
 ## Conclusion
-The FIR filter has 55 ports `(i_clk, i_rst, i_coeff_we, 4-bit addr, 16-bit coeff data, 16-bit sample, 16-bit result)` but the Zybo Z7-10 only exposes 50 user IO pins. It won't fit as a standalone top-level module. As a result, implementation and bitstream generation have not been generated. However, DSP48 inference has been verified at synthesis stage.
+The FIR filter has 55 ports `(i_clk, i_rst, i_coeff_we, 4-bit addr, 16-bit coeff data, 16-bit sample, 16-bit result)` but the Zybo Z7-10 only exposes 50 user IO pins. It won't fit as a standalone top-level module. As a result, bitstream generation have not been generated. However, DSP48 inference has been verified at synthesis stage; and out-of-context (OOC) implementation succeeded and provided real timing data.
