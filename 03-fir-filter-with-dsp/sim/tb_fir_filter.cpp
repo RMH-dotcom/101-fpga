@@ -112,7 +112,7 @@ int main() {
       printf("Cycle %d: FAIL: expected %d, got %d\n", i, expected[i], (int16_t)dut->o_result);
   }
 
-  // Test bench 2
+  // Test block 2
   dut->i_rst = 0; // assert reset
   dut->i_clk = 0;
   dut->eval();
