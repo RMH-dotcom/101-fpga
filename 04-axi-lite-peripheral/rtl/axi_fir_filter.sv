@@ -66,9 +66,9 @@ module axi_fir_filter
     );
 
   // Block 1: Write Address (AW) & Write data (W)
-  // 1. On reset: clear sample, coeff_we, and all AW/W/B outputs
+  // 1. On reset: fir_filter: clears sample, coeff_we, and all AW/W/B outputs
   // 2. On i_awvalid & i_wvalid: decode i_awaddr, route i_wdata to l_sample or coeff
-  // registers, acknowledge with o_awready/o_wready/o_bvalid
+  // registers to load a coefficient, acknowledge with o_awready/o_wready/o_bvalid
   always_ff @(posedge i_clk)
     begin
       if (!i_rst)
@@ -77,8 +77,8 @@ module axi_fir_filter
           l_coeff_we <= 1'b0;
           o_awready <= 1'b0;
           o_wready <= 1'b0;
-          o_bvalid <= 1'b0;
-          o_bresp <= 2'b00;
+          o_bvalid <= 1'b0; // DONE
+          o_bresp <= 2'b00; // OKAY, no error
         end
       else
         if (i_awvalid && i_wvalid)
@@ -190,7 +190,36 @@ module axi_fir_filter
                   l_coeff_data <= i_wdata[15:0];
                   l_coeff_we <= 1'b1;
                 end
-              default: l_coeff_we <= 1'b0;
+              default:
+                l_coeff_we <= 1'b0;
             endcase
           end
     end
+
+  // Block 2: Read Address (AR) & Read Data (R)
+  always_ff @(posedge i_clk)
+    begin
+      if (!i_rst)
+        begin
+          o_arready <= 1'b0;
+          o_rdata <= 1'b0;
+          o_rvalid <= 1'b0; // DONE
+          o_rresp <= 2'b00; // OKAY, no error
+        end
+      else
+        if (i_arvalid)
+          begin
+            o_arready <= 1'b1;
+            o_rvalid <= 1'b1;
+            o_rresp <= 2'b00; // read successful
+            case (i_araddr)
+              32'h04:
+                begin
+                  o_rdata <= {{16{l_result[15]}},l_result};
+                end
+              default:
+                o_rdata <= 1'b0;
+            endcase
+          end
+    end // always_ff @ (posedge i_clk)
+  endmodule
