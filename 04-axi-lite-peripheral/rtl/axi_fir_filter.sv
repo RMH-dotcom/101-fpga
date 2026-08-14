@@ -1,4 +1,5 @@
 /* verilator lint_off DECLFILENAME */
+/* verilator lint_off UNUSEDSIGNAL */
 module axi_fir_filter
   (
    // strb stands for strobe.
@@ -73,7 +74,7 @@ module axi_fir_filter
     begin
       if (!i_rst)
         begin
-          l_sample <= 1'b0;
+          l_sample <= '0;
           l_coeff_we <= 1'b0;
           o_awready <= 1'b0;
           o_wready <= 1'b0;
@@ -202,7 +203,7 @@ module axi_fir_filter
       if (!i_rst)
         begin
           o_arready <= 1'b0;
-          o_rdata <= 1'b0;
+          o_rdata <= '0;
           o_rvalid <= 1'b0; // DONE
           o_rresp <= 2'b00; // OKAY, no error
         end
@@ -218,7 +219,7 @@ module axi_fir_filter
                   o_rdata <= {{16{l_result[15]}},l_result};
                 end
               default:
-                o_rdata <= 1'b0;
+                o_rdata <= '0;
             endcase
           end
     end // always_ff @ (posedge i_clk)
