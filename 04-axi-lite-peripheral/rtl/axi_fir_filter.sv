@@ -82,6 +82,11 @@ module axi_fir_filter
           o_bresp <= 2'b00; // OKAY, no error
         end
       else
+        begin
+          o_awready <= 1'b0;
+          o_wready <= 1'b0;
+          o_bvalid <= 1'b0;
+          l_coeff_we <= 1'b0;
         if (i_awvalid && i_wvalid)
           begin
             o_awready <= 1'b1;
@@ -194,7 +199,8 @@ module axi_fir_filter
               default:
                 l_coeff_we <= 1'b0;
             endcase
-          end
+          end // if (i_awvalid && i_wvalid)
+        end
     end
 
   // Block 2: Read Address (AR) & Read Data (R)
@@ -208,6 +214,9 @@ module axi_fir_filter
           o_rresp <= 2'b00; // OKAY, no error
         end
       else
+        begin
+          o_arready <= 1'b0;
+          o_rvalid <= 1'b0;
         if (i_arvalid)
           begin
             o_arready <= 1'b1;
@@ -221,6 +230,7 @@ module axi_fir_filter
               default:
                 o_rdata <= '0;
             endcase
-          end
+          end // if (i_arvalid)
+        end
     end // always_ff @ (posedge i_clk)
   endmodule
