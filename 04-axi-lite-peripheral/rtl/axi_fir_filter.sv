@@ -38,15 +38,15 @@ module axi_fir_filter
     input               i_bready,
 
    // Read address channel (AR)
-    input [31:0]        i_araddr,
-    input               i_arvalid,
-    output logic        o_arready,
+    input [31:0]        i_araddr, // from AXI request
+    input               i_arvalid, // "DONE" from AXI request
+    output logic        o_arready, // from AXI request
 
    // Read data channel (R)
-    output logic [31:0] o_rdata,
+    output logic [31:0] o_rdata, // from FIR
     output logic [1:0]  o_rresp,
-    output logic        o_rvalid,
-    input               i_rready
+    output logic        o_rvalid, // "DONE" from FIR
+    input               i_rready // "ACKNOWLEDGE" from AXI
    );
   logic               l_coeff_we;
   logic [3:0]         l_coeff_addr;
@@ -66,171 +66,45 @@ module axi_fir_filter
      .o_result (l_result)
     );
 
-  // Block 1: Write Address (AW) & Write data (W)
-  // 1. On reset: fir_filter: clears sample, coeff_we, and all AW/W/B outputs
-  // 2. On i_awvalid & i_wvalid: decode i_awaddr, route i_wdata to l_sample or coeff
-  // registers to load a coefficient, acknowledge with o_awready/o_wready/o_bvalid
-  always_ff @(posedge i_clk)
-    begin
-      if (!i_rst)
-        begin
-          l_sample <= '0;
-          l_coeff_we <= 1'b0;
-          o_awready <= 1'b0;
-          o_wready <= 1'b0;
-          o_bvalid <= 1'b0; // DONE
-          o_bresp <= 2'b00; // OKAY, no error
-        end
-      else
-        begin
-          o_awready <= 1'b0;
-          o_wready <= 1'b0;
-          o_bvalid <= 1'b0;
-          l_coeff_we <= 1'b0;
-        if (i_awvalid && i_wvalid)
-          begin
-            o_awready <= 1'b1;
-            o_wready <= 1'b1;
-            o_bvalid <= 1'b1;
-            o_bresp <= 2'b00;
-
-            case (i_awaddr)
-              32'h00:
-                begin
-                  l_sample <= i_wdata[15:0];
-                  l_coeff_we <= 1'b0;
-                end
-              32'h08:
-                begin
-                  l_coeff_addr <= 4'd0;
-                  l_coeff_data <= i_wdata[15:0];
-                  l_coeff_we <= 1'b1;
-                end
-              32'h0C:
-                begin
-                  l_coeff_addr <= 4'd1;
-                  l_coeff_data <= i_wdata[15:0];
-                  l_coeff_we <= 1'b1;
-                end
-              32'h10:
-                begin
-                  l_coeff_addr <= 4'd2;
-                  l_coeff_data <= i_wdata[15:0];
-                  l_coeff_we <= 1'b1;
-                end
-              32'h14:
-                begin
-                  l_coeff_addr <= 4'd3;
-                  l_coeff_data <= i_wdata[15:0];
-                  l_coeff_we <= 1'b1;
-                end
-              32'h18:
-                begin
-                  l_coeff_addr <= 4'd4;
-                  l_coeff_data <= i_wdata[15:0];
-                  l_coeff_we <= 1'b1;
-                end
-              32'h1C:
-                begin
-                  l_coeff_addr <= 4'd5;
-                  l_coeff_data <= i_wdata[15:0];
-                  l_coeff_we <= 1'b1;
-                end
-              32'h20:
-                begin
-                  l_coeff_addr <= 4'd6;
-                  l_coeff_data <= i_wdata[15:0];
-                  l_coeff_we <= 1'b1;
-                end
-              32'h24:
-                begin
-                  l_coeff_addr <= 4'd7;
-                  l_coeff_data <= i_wdata[15:0];
-                  l_coeff_we <= 1'b1;
-                end
-              32'h28:
-                begin
-                  l_coeff_addr <= 4'd8;
-                  l_coeff_data <= i_wdata[15:0];
-                  l_coeff_we <= 1'b1;
-                end
-              32'h2C:
-                begin
-                  l_coeff_addr <= 4'd9;
-                  l_coeff_data <= i_wdata[15:0];
-                  l_coeff_we <= 1'b1;
-                end
-              32'h30:
-                begin
-                  l_coeff_addr <= 4'd10;
-                  l_coeff_data <= i_wdata[15:0];
-                  l_coeff_we <= 1'b1;
-                end
-              32'h34:
-                begin
-                  l_coeff_addr <= 4'd11;
-                  l_coeff_data <= i_wdata[15:0];
-                  l_coeff_we <= 1'b1;
-                end
-              32'h38:
-                begin
-                  l_coeff_addr <= 4'd12;
-                  l_coeff_data <= i_wdata[15:0];
-                  l_coeff_we <= 1'b1;
-                end
-              32'h3C:
-                begin
-                  l_coeff_addr <= 4'd13;
-                  l_coeff_data <= i_wdata[15:0];
-                  l_coeff_we <= 1'b1;
-                end
-              32'h40:
-                begin
-                  l_coeff_addr <= 4'd14;
-                  l_coeff_data <= i_wdata[15:0];
-                  l_coeff_we <= 1'b1;
-                end
-              32'h44:
-                begin
-                  l_coeff_addr <= 4'd15;
-                  l_coeff_data <= i_wdata[15:0];
-                  l_coeff_we <= 1'b1;
-                end
-              default:
-                l_coeff_we <= 1'b0;
-            endcase
-          end // if (i_awvalid && i_wvalid)
-        end
-    end
-
+  // Block 1: Write Address (AW), Write data (W) & Write Response (B)
   // Block 2: Read Address (AR) & Read Data (R)
-  always_ff @(posedge i_clk)
-    begin
-      if (!i_rst)
-        begin
-          o_arready <= 1'b0;
-          o_rdata <= '0;
-          o_rvalid <= 1'b0; // DONE
-          o_rresp <= 2'b00; // OKAY, no error
-        end
-      else
-        begin
-          o_arready <= 1'b0;
-          o_rvalid <= 1'b0;
-        if (i_arvalid)
-          begin
-            o_arready <= 1'b1;
-            o_rvalid <= 1'b1;
-            o_rresp <= 2'b00; // read successful
-            case (i_araddr)
-              32'h04:
-                begin
-                  o_rdata <= {{16{l_result[15]}},l_result};
-                end
-              default:
-                o_rdata <= '0;
-            endcase
-          end // if (i_arvalid)
-        end
-    end // always_ff @ (posedge i_clk)
-  endmodule
+
+  // -- IN FACTORIO TERMS --
+
+  // 1. l_result 16-bit to 32-bit
+  // l_result is a 16-bit signed integer.
+  // However, the AXI-Lite Read Data Bus (o_rdata) is 32 bits wide.
+  // We can't just place a 16-bit block into a 32-bit cargo wagon without securing it.
+  // or the signed bit formatting will break.
+  // {{16{l_result[15]}}, l_result} will replicate the sign bit (bit 15) 16x to fill
+  // the upper half of the cargo wagon.
+  // -5(16'hFFFB) safely becomes -5 in 32-bit format (32'hFFFFFFFB).
+
+
+  // 2. Read Address Request (AR Phase)
+  // The AXI wrapper sends a schedule (request) train to pick up cargo:
+  //
+  // Inputs active:
+  // The combinator for train i_araddr fires the target reg address 32'h04,
+  // and throws the i_arvalid switch high.
+  // "The train is ready, and the address is stable".
+  //
+  // Wrapper action:
+  // The AXI wrapper reads i_araddr. If it matchs 32'h04, it prepares the cargo.
+  // The AXI wrapper fires the o_arready output high for exactly one clock cycle.
+  // "I've acknowledged your request train. It may leave the station."
+
+  // 3. Read (R) Phase
+  // A unloading train is sent from the wrapper to l_result:
+  //
+  // Outputs active:
+  // An inserter loads the sign-extended data (32'hFFFFFFFB) from the l_result chest
+  // into the o_rdata cargo wagon, on the train.
+  // l_result 's combinator throws the o_rvalid switch HIGH.
+  // "The shipping cargo is sitting on the cargo wagon right now"
+  // o_rvalid && i_rready must both = HIGH.
+  //
+  // On the exactly clock edge where both o_rvalid and i_rready are HIGH simultaneously,
+  // the Master's internal input registers snapshot (latch) the 32-bit 'o_rdata' value.
+  // In the very next cycle, the wrapper must lower 'o_rvalid' to clear the track,
+  // and it must also lower 'o_rvalid' (or 'o_rresp') to conclude the transaction.
