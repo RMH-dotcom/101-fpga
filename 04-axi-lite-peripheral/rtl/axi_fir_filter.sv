@@ -80,8 +80,8 @@ module axi_fir_filter
         o_awready <= 1'b0;
         l_wready_reg <= 1'b0;
         l_awready_reg <= 1'b0;
-        l_awaddr_reg <= 1'b0;
-        l_wdata_reg <= 1'b0;
+        l_awaddr_reg <= '0;
+        l_wdata_reg <= '0;
         o_bvalid <= 1'b0;
         o_bresp <= 2'b00;
         l_sample <= '0;
@@ -124,10 +124,138 @@ module axi_fir_filter
             o_bvalid <= 1'b1;
             l_awready_reg <= 1'b0; // clear AW ready
             l_wready_reg <= 1'b0; // clear W ready
+
+            case (l_awaddr_reg)
+              32'h00: l_sample <= l_wdata_reg[15:0];
+              32'h08:
+                begin
+                  l_coeff_addr <= 4'd0;
+                  l_coeff_data <= l_wdata_reg[15:0];
+                  l_coeff_we <= 1'b1;
+                end
+              32'h0C:
+                begin
+                  l_coeff_addr <= 4'd1;
+                  l_coeff_data <= l_wdata_reg[15:0];
+                  l_coeff_we <= 1'b1;
+                end
+              32'h10:
+                begin
+                  l_coeff_addr <= 4'd2;
+                  l_coeff_data <= l_wdata_reg[15:0];
+                  l_coeff_we <= 1'b1;
+                end
+              32'h14:
+                begin
+                  l_coeff_addr <= 4'd3;
+                  l_coeff_data <= l_wdata_reg[15:0];
+                  l_coeff_we <= 1'b1;
+                end
+              32'h18:
+                begin
+                  l_coeff_addr <= 4'd4;
+                  l_coeff_data <= l_wdata_reg[15:0];
+                  l_coeff_we <= 1'b1;
+                end
+              32'h1C:
+                begin
+                  l_coeff_addr <= 4'd5;
+                  l_coeff_data <= l_wdata_reg[15:0];
+                  l_coeff_we <= 1'b1;
+                end
+              32'h20:
+                begin
+                  l_coeff_addr <= 4'd6;
+                  l_coeff_data <= l_wdata_reg[15:0];
+                  l_coeff_we <= 1'b1;
+                end
+              32'h24:
+                begin
+                  l_coeff_addr <= 4'd7;
+                  l_coeff_data <= l_wdata_reg[15:0];
+                  l_coeff_we <= 1'b1;
+                end
+              32'h28:
+                begin
+                  l_coeff_addr <= 4'd8;
+                  l_coeff_data <= l_wdata_reg[15:0];
+                  l_coeff_we <= 1'b1;
+                end
+              32'h2C:
+                begin
+                  l_coeff_addr <= 4'd9;
+                  l_coeff_data <= l_wdata_reg[15:0];
+                  l_coeff_we <= 1'b1;
+                end
+              32'h30:
+                begin
+                  l_coeff_addr <= 4'd10;
+                  l_coeff_data <= l_wdata_reg[15:0];
+                  l_coeff_we <= 1'b1;
+                end
+              32'h34:
+                begin
+                  l_coeff_addr <= 4'd11;
+                  l_coeff_data <= l_wdata_reg[15:0];
+                  l_coeff_we <= 1'b1;
+                end
+              32'h38:
+                begin
+                  l_coeff_addr <= 4'd12;
+                  l_coeff_data <= l_wdata_reg[15:0];
+                  l_coeff_we <= 1'b1;
+                end
+              32'h3C:
+                begin
+                  l_coeff_addr <= 4'd13;
+                  l_coeff_data <= l_wdata_reg[15:0];
+                  l_coeff_we <= 1'b1;
+                end
+              32'h40:
+                begin
+                  l_coeff_addr <= 4'd14;
+                  l_coeff_data <= l_wdata_reg[15:0];
+                  l_coeff_we <= 1'b1;
+                end
+              32'h44:
+                begin
+                  l_coeff_addr <= 4'd15;
+                  l_coeff_data <= l_wdata_reg[15:0];
+                  l_coeff_we <= 1'b1;
+                end
+              default: l_coeff_we <= 1'b0;
+            endcase
           end
       end // else: !if(!i_rst)
 
   // Block 2: Read Address (AR) & Read Data (R)
+  always_ff @(posedge i_clk)
+    if (!i_rst)
+      begin
+        o_arready <= 1'b0;
+        o_rdata <= '0;
+        o_rvalid <= 1'b0;
+        o_rresp <= 2'b00;
+      end
+    else
+      begin
+        if (o_rvalid && i_rready)
+          begin
+            o_rvalid <= 1'b0;
+            o_arready <= 1'b0;
+          end
+
+        if (i_arvalid && !o_rvalid)
+          begin
+            o_arready <= 1'b1;
+            o_rvalid <= 1'b1;
+            o_rresp <= 2'b00;
+            case (i_araddr)
+              32'h04: o_rdata <= {{16{l_result[15]}}, l_result};
+              default: o_rdata <= '0;
+            endcase
+          end
+      end
 
   // -- IN FACTORIO TERMS --
 
@@ -168,3 +296,4 @@ module axi_fir_filter
   // the Master's internal input registers snapshot (latch) the 32-bit 'o_rdata' value.
   // In the very next cycle, the wrapper must lower 'o_rvalid' to clear the track,
   // and it must also lower 'o_rvalid' (or 'o_rresp') to conclude the transaction.
+endmodule // axi_fir_filter
