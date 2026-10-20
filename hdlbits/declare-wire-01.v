@@ -1,10 +1,8 @@
+/* verilator lint_off DECLFILENAME */
 // When circuits become too complex, we need wires to connect internal components together.
 // When we use a wire, we should declare it in the body of the module.
 
-module declare_wire_01 (
-    input  in,
-    output out
-);
+module declare_wire_01 ( input  in, output out );
   wire not_in;  // Declare a wire named "not_in").
 
   // The wire "not_in" acts as a bridge between the input and output wires.

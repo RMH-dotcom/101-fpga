@@ -5,14 +5,7 @@
 // The wires are driven by one source but can feed multiple inputs.
 
 `default_nettype none
-module declare_wire_02 (
-    input  a,
-    b,
-    c,
-    d,  // Four inputs.
-    output out,
-    out_n  // Two outputs.
-);
+module declare_wire_02 ( input  a, b, c, d, output out, out_n );
 
   wire w1, w2;  // Two wires connecting the first AND gates to the OR gate.
 
