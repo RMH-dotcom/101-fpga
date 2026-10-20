@@ -44,3 +44,4 @@ formal/*/
 
 # Other
 .directory
+.projectile
