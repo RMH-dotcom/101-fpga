@@ -45,3 +45,4 @@ formal/*/
 # Other
 .directory
 .projectile
+.clang-format
