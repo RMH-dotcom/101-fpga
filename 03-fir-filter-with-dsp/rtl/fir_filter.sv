@@ -76,6 +76,10 @@ module fir_filter
 
   // On cycle 0, reset must be asserted.
   // After that first cycle, l_regs are all 0 and the bound holds inductively.
+  //
+  // Basically: K-induction proves that no matter what state the design is in,
+  // no matter how long it's been running or what inputs it received
+  // if reset is asserted, o_result will be 0 on the next cycle.
   always @(*)
     begin
       if (!f_past_valid)
